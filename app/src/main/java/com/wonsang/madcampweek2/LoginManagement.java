@@ -27,7 +27,6 @@ public class LoginManagement implements OAuthLogin{
         return instance;
     }
 
-
     public Intent login(Context context, String clientId) {
         GoogleSignInOptions gso =
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

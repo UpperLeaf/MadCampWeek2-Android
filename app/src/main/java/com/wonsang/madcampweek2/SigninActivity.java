@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.android.volley.VolleyError;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -97,16 +98,14 @@ public class SigninActivity extends AppCompatActivity implements ApiCallable {
     @Override
     public void getResponse(ApiProvider.RequestType type, JsonHeaderRequest.JsonHeaderObject response) {
         if(type == ApiProvider.RequestType.TOKEN_VALIDATION){
-            int statusCode = response.getStatus();
-            if(statusCode == 200){
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-            }
-            else if(statusCode == 403)
-                System.out.println("토큰 만료 또는 유효성 검사 실패");
-            else if(statusCode == 500)
-                System.out.println("나도 모름");
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         }
+    }
+
+    @Override
+    public void getError(VolleyError error) {
+        System.out.println(error);
     }
 
     public static class InsertAsyncTask extends AsyncTask<AccountData, Void, Void> {
