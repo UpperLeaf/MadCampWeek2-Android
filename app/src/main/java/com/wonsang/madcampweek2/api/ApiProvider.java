@@ -6,6 +6,7 @@ import android.util.Log;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.google.android.gms.auth.api.Auth;
 import com.wonsang.madcampweek2.model.Contact;
 
 import org.json.JSONException;
@@ -74,9 +75,26 @@ public class ApiProvider {
         }
     }
 
+    public void getAllImages(String token, ApiCallable apiCallable) {
+        String requestUrl = url + "picture/";
+
+        JsonHeaderRequest request = new JsonHeaderRequest(Request.Method.GET
+                , requestUrl
+                , null
+                , response -> apiCallable.getResponse(RequestType.GET_ALL_IMAGES, response)
+                , apiCallable::getError);
+        try {
+            request.getHeaders().put("Authorization", token);
+        }catch (AuthFailureError error){
+            error.printStackTrace();
+        }
+        requestQueue.add(request);
+    }
+
     public enum RequestType{
         TOKEN_VALIDATION,
         GET_ALL_CONTACTS,
         ADD_CONTACTS,
+        GET_ALL_IMAGES
     }
 }

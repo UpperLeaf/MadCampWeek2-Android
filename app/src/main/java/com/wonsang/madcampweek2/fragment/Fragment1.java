@@ -1,4 +1,4 @@
-package com.wonsang.madcampweek2;
+package com.wonsang.madcampweek2.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.VolleyError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.wonsang.madcampweek2.AccountData;
+import com.wonsang.madcampweek2.AccountDatabase;
+import com.wonsang.madcampweek2.AddContactActivity;
+import com.wonsang.madcampweek2.R;
+import com.wonsang.madcampweek2.adapter.RecyclerAdapter;
 import com.wonsang.madcampweek2.api.ApiCallable;
 import com.wonsang.madcampweek2.api.ApiProvider;
 import com.wonsang.madcampweek2.api.JsonHeaderRequest;
