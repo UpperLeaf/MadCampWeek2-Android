@@ -28,10 +28,9 @@ import java.util.ArrayList;
 import java.util.Map;
 
 
-public class SigninActivity extends AppCompatActivity implements ApiCallable {
+public class SignInActivity extends AppCompatActivity {
 
     SignInButton signInButton;
-    private ApiProvider apiProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,22 +39,13 @@ public class SigninActivity extends AppCompatActivity implements ApiCallable {
         signInButton = findViewById(R.id.sign_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD);
 
-        AccountDatabase ab = AccountDatabase.getAppDatabase(this);
         LoginManagement loginManagement = LoginManagement.getInstance();
-        apiProvider = new ApiProvider(this);
-        if (ab.AccountDataDao().getCount() >= 1) {
-            AccountData data = ab.AccountDataDao().findAccountDataLimitOne();
-            apiProvider.isValidAccessToken(data.getToken(), this);
-        }
+
         signInButton.setOnClickListener(v -> {
             Intent intent = loginManagement.login(this, getString(R.string.client_id));
             startActivityForResult(intent, 100);
-
         });
-
-
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -83,46 +73,12 @@ public class SigninActivity extends AppCompatActivity implements ApiCallable {
             Log.d("Name 2: ", m2);
             Log.d("Name 3: ", m3);
             Log.d("Email :", email);
-            new InsertAsyncTask(ab.AccountDataDao()).execute(new AccountData(m4));
+
+            ab.AccountDataDao().insert(new AccountData(m4));
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void getResponse(ApiProvider.RequestType type, JsonHeaderRequest.JsonHeaderObject response) {
-        if (type == ApiProvider.RequestType.TOKEN_VALIDATION) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        }
-    }
-
-    @Override
-    public void getError(VolleyError error) {
-//        LoginManagement loginManagement = LoginManagement.getInstance();
-        AccountDatabase ab = AccountDatabase.getAppDatabase(this);
-        ab.AccountDataDao().deleteAll();
-//        revokeAccess();
-
-//        Intent intent = loginManagement.login(this, getString(R.string.client_id));
-//        startActivityForResult(intent, 100);
-
-    }
-
-    public static class InsertAsyncTask extends AsyncTask<AccountData, Void, Void> {
-        private AccountDataDao mAccountDataDao;
-
-
-        public InsertAsyncTask(AccountDataDao accountDatadao) {
-            this.mAccountDataDao = accountDatadao;
-        }
-
-        @Override
-        protected Void doInBackground(AccountData... AccountDatas) {
-            mAccountDataDao.insert(AccountDatas[0]);
-            return null;
         }
     }
 }

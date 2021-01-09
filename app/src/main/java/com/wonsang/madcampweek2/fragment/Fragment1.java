@@ -2,9 +2,12 @@ package com.wonsang.madcampweek2.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,7 +31,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Fragment1 extends Fragment implements ApiCallable {
+public class Fragment1 extends Fragment implements ApiCallable, View.OnClickListener {
     private ApiProvider apiProvider;
     private RecyclerAdapter adapter;
     private ArrayList<Contact> list = new ArrayList<>();
@@ -47,7 +50,7 @@ public class Fragment1 extends Fragment implements ApiCallable {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        FloatingActionButton fab = rootView.findViewById(R.id.floatingActionButton2);
+        FloatingActionButton fab = rootView.findViewById(R.id.fab_main);
         fab.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity().getApplicationContext(), AddContactActivity.class);
             getActivity().startActivityForResult(intent, 100);
@@ -83,5 +86,47 @@ public class Fragment1 extends Fragment implements ApiCallable {
         int pos = this.adapter.getList().size();
         this.adapter.getList().add(contact);
         this.adapter.notifyItemInserted(pos);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+
+            case R.id.fab_main:
+                toggleFab();
+                break;
+
+            case R.id.fab_sub1:
+                toggleFab();
+//                Toast.makeText(this, "Camera Open-!", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.fab_sub2:
+                toggleFab();
+//                Toast.makeText(this, "Map Open-!", Toast.LENGTH_SHORT).show();
+                break;
+
+        }
+    }
+    private void toggleFab() {
+        Log.d("hi", "hi");
+        //
+//        if (isFabOpen) {
+//            fab_main.setImageResource(R.drawable.ic_add);
+//            fab_sub1.startAnimation(fab_close);
+//            fab_sub2.startAnimation(fab_close);
+//            fab_sub1.setClickable(false);
+//            fab_sub2.setClickable(false);
+//            isFabOpen = false;
+//
+//        } else {
+//            fab_main.setImageResource(R.drawable.ic_close);
+//            fab_sub1.startAnimation(fab_open);
+//            fab_sub2.startAnimation(fab_open);
+//            fab_sub1.setClickable(true);
+//            fab_sub2.setClickable(true);
+//            isFabOpen = true;
+//
+//        }
     }
 }
