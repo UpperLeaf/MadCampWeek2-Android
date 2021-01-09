@@ -20,7 +20,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder
     private Context context;
     private List<Contact> list;
 
-
     public RecyclerAdapter(Context context, List<Contact> list) {
         this.context = context;
         this.list = list;
