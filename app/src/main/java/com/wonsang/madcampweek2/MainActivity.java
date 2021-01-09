@@ -25,6 +25,15 @@ import com.wonsang.madcampweek2.model.Contact;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.view.View;
+
+import android.view.animation.Animation;
+
+import android.view.animation.AnimationUtils;
+
+import android.widget.Toast;
+
+
 
 public class MainActivity extends AppCompatActivity {
     public GoogleSignInClient mGoogleSignInClient;
@@ -102,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                                 // 로그아웃 함수 call
 
                                 loginManagement.logout(getApplicationContext(), getString(R.string.client_id));
-                                Intent intent = new Intent(getApplicationContext(), SigninActivity.class);
+                                Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
                                 startActivity(intent);
 //                                revokeAccess();
 
@@ -150,5 +159,6 @@ public class MainActivity extends AppCompatActivity {
        });
    }
 
-}
+
+    }
 
