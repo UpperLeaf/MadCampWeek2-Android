@@ -11,6 +11,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,11 +29,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Fragment1 extends Fragment implements ApiCallable {
     private ApiProvider apiProvider;
     private RecyclerAdapter adapter;
     private ArrayList<Contact> list = new ArrayList<>();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_1, container, false);
@@ -40,7 +43,7 @@ public class Fragment1 extends Fragment implements ApiCallable {
         AccountData data = ab.AccountDataDao().findAccountDataLimitOne();
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview1);
         recyclerView.setHasFixedSize(true);
-        apiProvider = new ApiProvider(getActivity());
+        apiProvider = new ApiProvider(getContext());
         apiProvider.getAllContacts(data.getToken(), this);
 //        list =
         adapter = new RecyclerAdapter(getActivity(), list);
@@ -48,139 +51,40 @@ public class Fragment1 extends Fragment implements ApiCallable {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         FloatingActionButton fab = rootView.findViewById(R.id.floatingActionButton2);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity().getApplicationContext(), AddContactActivity.class);
-                startActivity(intent);
-            }
+        fab.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity().getApplicationContext(), AddContactActivity.class);
+            getActivity().startActivityForResult(intent, 100);
         });
         return rootView;
     }
 
     @Override
     public void getResponse(ApiProvider.RequestType type, JsonHeaderRequest.JsonHeaderObject response) {
-        JSONArray responsebody;
-        int cnt = 0;
-        Contact Contact = new Contact();
-        if (type == ApiProvider.RequestType.GET_ALL_CONTACTS) {
-            responsebody = response.getResponse();
-            while (responsebody.length()>cnt) {
-                try {
-                    JSONObject jsonObject = responsebody.getJSONObject(cnt);
-                    String username = jsonObject.getString("name");
-                    String userphnumber = jsonObject.getString("phone_number");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
+        JSONArray jsonArray = response.getResponse();
+        List<Contact> contacts = new ArrayList<>();
 
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject object = jsonArray.getJSONObject(i);
+                String name = object.getString("name");
+                String phoneNumber = object.getString("phone_number");
+                contacts.add(new Contact(name, phoneNumber));
+            }
+        }catch (JSONException ex){
+            ex.printStackTrace();
         }
+        adapter.setList(contacts);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void getError(VolleyError error) {
+        System.out.println(error);
+    }
 
+    public void notifyAddContact(Contact contact) {
+        int pos = this.adapter.getList().size();
+        this.adapter.getList().add(contact);
+        this.adapter.notifyItemInserted(pos);
     }
 }
-//public class Fragment1 extends Fragment implements View.OnClickListener {
-//    private Context mContext;
-//    private RecyclerView recyclerView;
-////    private FragmentAdapter adapter;
-////    private ArrayList<Contacts> list = new ArrayList<>();
-////    Button loadBtn;
-//    private FloatingActionButton fab_main, fab_sub1, fab_sub2;
-//    private Animation fab_open, fab_close;
-//    private boolean isFabOpen = false;
-//
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//        Context mContext = getActivity().getApplicationContext();
-//
-//        fab_open = AnimationUtils.loadAnimation(mContext, R.anim.fab_open);
-//        fab_close = AnimationUtils.loadAnimation(mContext, R.anim.fab_close);
-//        fab_main = (FloatingActionButton) findViewById(R.id.fab_main);
-//        fab_sub1 = (FloatingActionButton) findViewById(R.id.fab_sub1);
-//        fab_sub2 = (FloatingActionButton) findViewById(R.id.fab_sub2);
-//        fab_main.setOnClickListener(this);
-//        fab_sub1.setOnClickListener(this);
-//        fab_sub2.setOnClickListener(this);
-//
-//    }
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_1, container, false);
-//
-////        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler1);
-////        recyclerView.setHasFixedSize(true);
-//////        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//////        list = Contacts.createContactsList(getActivity());
-////        list = Contacts.createContactsList(getActivity());
-////        adapter = new FragmentAdapter(getActivity(), list);
-////        recyclerView.setAdapter(adapter);
-////        Log.e("Frag", "MainFragment");
-////        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//////        loadBtn = (Button) rootView.findViewById(R.id.button1);
-//////        loadBtn.setOnClickListener(new View.OnClickListener() {
-//////            @Override
-//////            public void onClick(View v) {
-//////                // TODO Auto-generated method stub
-//////                list = Contacts.createContactsList(getActivity());
-//////                adapter = new FragmentAdapter(getActivity(), list);
-//////                recyclerView.setAdapter(adapter);
-//////                loadBtn.setVisibility(rootView.GONE);
-//////            }
-//////        });
-//        FloatingActionButton fab = rootView.findViewById(R.id.floatingActionButton2);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//               Intent intent = new Intent(getActivity().getApplicationContext(), AddContactActivity.class);
-//               startActivity(intent);
-//            }
-//        });
-//
-//        private void toggleFab() {
-//
-//            if (isFabOpen) {
-//
-//                fab_main.setImageResource(R.drawable.ic_add);
-//
-//                fab_sub1.startAnimation(fab_close);
-//
-//                fab_sub2.startAnimation(fab_close);
-//
-//                fab_sub1.setClickable(false);
-//
-//                fab_sub2.setClickable(false);
-//
-//                isFabOpen = false;
-//
-//            } else {
-//
-//                fab_main.setImageResource(R.drawable.ic_close);
-//
-//                fab_sub1.startAnimation(fab_open);
-//
-//                fab_sub2.startAnimation(fab_open);
-//
-//                fab_sub1.setClickable(true);
-//
-//                fab_sub2.setClickable(true);
-//
-//                isFabOpen = true;
-//
-//            }
-//
-//        }
-//        return rootView;
-//    }
-//
-//    @Override
-//    public void onClick(View v) {
-//
-//    }
-//}

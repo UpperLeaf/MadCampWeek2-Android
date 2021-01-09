@@ -24,6 +24,7 @@ import com.wonsang.madcampweek2.api.ApiCallable;
 import com.wonsang.madcampweek2.api.ApiProvider;
 import com.wonsang.madcampweek2.api.JsonHeaderRequest;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 
@@ -31,6 +32,7 @@ public class SigninActivity extends AppCompatActivity implements ApiCallable {
 
     SignInButton signInButton;
     private ApiProvider apiProvider;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,8 +54,6 @@ public class SigninActivity extends AppCompatActivity implements ApiCallable {
         });
 
 
-
-
     }
 
 
@@ -68,13 +68,14 @@ public class SigninActivity extends AppCompatActivity implements ApiCallable {
 
         }
     }
+
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask, AccountDatabase ab) {
         try {
 
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             String email = account.getEmail();
             String m = account.getFamilyName();
-            String m2 =account.getGivenName();
+            String m2 = account.getGivenName();
             String m3 = account.getDisplayName();
             String m4 = account.getIdToken();
             Log.d("TOKEN", account.getIdToken());
@@ -92,7 +93,7 @@ public class SigninActivity extends AppCompatActivity implements ApiCallable {
 
     @Override
     public void getResponse(ApiProvider.RequestType type, JsonHeaderRequest.JsonHeaderObject response) {
-        if(type == ApiProvider.RequestType.TOKEN_VALIDATION){
+        if (type == ApiProvider.RequestType.TOKEN_VALIDATION) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
@@ -114,48 +115,14 @@ public class SigninActivity extends AppCompatActivity implements ApiCallable {
         private AccountDataDao mAccountDataDao;
 
 
-        public InsertAsyncTask(AccountDataDao accountDatadao){
+        public InsertAsyncTask(AccountDataDao accountDatadao) {
             this.mAccountDataDao = accountDatadao;
         }
+
         @Override
         protected Void doInBackground(AccountData... AccountDatas) {
             mAccountDataDao.insert(AccountDatas[0]);
             return null;
         }
     }
-
-//    public static class AgentAsyncTask extends AsyncTask<Void, Void, Integer> {
-////        private AccountDataDao mAccountDataDao;
-//        private WeakReference<Activity> weakActivity;
-//        private String Token;
-//
-//        public AgentAsyncTask(Activity activity, String Token) {
-//            weakActivity = new WeakReference<>(activity);
-//            this.Token =Token;
-//
-//        }
-//        @Override
-//        protected Integer doInBackground(Void... params) {
-//            AccountDataDao accountDataDao = AccountDatabase.getAppDatabase.AccountDataDao();
-//        }
-//
-//        @Override
-//        protected Integer doInBackground(Void... params) {
-//            Activity activity = weakActivity.get();
-//            if (activity == null) {
-//                return;
-//            }
-//
-//            if (agentsCount )
-//        }
-//        public CheckAsyncTask(AccountDataDao accountDatadao){
-//            this.mAccountDataDao = accountDatadao;
-//        }
-//        CheckAsyncTask.execute(new Runnable(){
-//            @Override
-//            public void run() {
-//                AccountDatabase.getInstance(context)
-//            }
-//        })
-//    }
 }

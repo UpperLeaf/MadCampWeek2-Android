@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.viewpager.widget.ViewPager;
 
@@ -20,6 +21,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
+import com.wonsang.madcampweek2.model.Contact;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     public GoogleSignInClient mGoogleSignInClient;
     private LoginManagement loginManagement = LoginManagement.getInstance();
+    private ViewpagerAdapter viewpagerAdapter;
     private TextView mResultTextView;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,8 +37,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ViewPager vp = findViewById(R.id.viewpager);
-        ViewpagerAdapter adapter = new ViewpagerAdapter(getSupportFragmentManager());
-        vp.setAdapter(adapter);
+        viewpagerAdapter = new ViewpagerAdapter(getSupportFragmentManager());
+        vp.setAdapter(viewpagerAdapter);
 
         TabLayout tab = findViewById(R.id.tabLayout);
         tab.setupWithViewPager(vp);
@@ -58,6 +61,18 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
 //        mResultTextView.setText(ab.AccountDataDao().getAll().toString());
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 100 && data != null) {
+            String name = data.getStringExtra("name");
+            String phoneNumber = data.getStringExtra("phoneNumber");
+            Contact contact = new Contact(name, phoneNumber);
+            Fragment1 fragment1 = (Fragment1) viewpagerAdapter.getItems().get(ViewpagerAdapter.CONTACT_POSITION);
+            fragment1.notifyAddContact(contact);
+        }
+    }
 
     @Override
     public void onBackPressed() {

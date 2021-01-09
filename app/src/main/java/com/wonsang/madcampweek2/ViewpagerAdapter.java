@@ -12,6 +12,9 @@ public class ViewpagerAdapter extends FragmentPagerAdapter {
     private ArrayList<Fragment> items;
     private ArrayList<String> itext = new ArrayList<String>();
 
+    public static int CONTACT_POSITION = 0;
+    public static int GALLERY_POSITION = 1;
+
     public ViewpagerAdapter(@NonNull FragmentManager fm) {
         super(fm);
 
@@ -23,6 +26,10 @@ public class ViewpagerAdapter extends FragmentPagerAdapter {
         itext.add("contact");
         itext.add("gallery");
         itext.add("health");
+    }
+
+    public ArrayList<Fragment> getItems() {
+        return items;
     }
 
     @Nullable

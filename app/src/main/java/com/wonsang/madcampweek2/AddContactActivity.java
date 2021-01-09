@@ -1,7 +1,10 @@
 package com.wonsang.madcampweek2;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.view.View;
@@ -56,11 +59,23 @@ public class AddContactActivity extends AppCompatActivity implements ApiCallable
         apiProvider.AddContact(data.getToken(), name, phnumbers, this);
     }
 
+
     @Override
     public void getResponse(ApiProvider.RequestType type, JsonHeaderRequest.JsonHeaderObject response) {
         if (type == ApiProvider.RequestType.ADD_CONTACTS){
-//            JSONObject data = response.getResponse();
-            tv.setText("Success");
+            try {
+                String name = response.getResponse().getJSONObject(0).getString("name");
+                String phoneNumber = response.getResponse().getJSONObject(0).getString("phone_number");
+
+                Intent intent = new Intent();
+                intent.putExtra("name", name);
+                intent.putExtra("phoneNumber", phoneNumber);
+                setResult(100, intent);
+                finish();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -68,5 +83,10 @@ public class AddContactActivity extends AppCompatActivity implements ApiCallable
     public void getError(VolleyError error) {
 
     }
-
+    public void restartActivity(Activity act) {
+        Intent intent = new Intent();
+        intent.setClass(act, act.getClass());
+        finish();
+        startActivity(intent);
+    }
 }

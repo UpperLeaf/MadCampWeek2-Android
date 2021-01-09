@@ -1,4 +1,3 @@
-
 package com.wonsang.madcampweek2;
 
 
@@ -19,10 +18,18 @@ import java.util.List;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder> {
 
     private Context context;
-    private List<Contact> list = new ArrayList<>();
+    private List<Contact> list;
+
 
     public RecyclerAdapter(Context context, List<Contact> list) {
         this.context = context;
+        this.list = list;
+    }
+
+    public List<Contact> getList() {
+        return list;
+    }
+    public void setList(List<Contact> list) {
         this.list = list;
     }
 

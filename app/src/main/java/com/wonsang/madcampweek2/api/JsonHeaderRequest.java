@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,12 +42,13 @@ public class JsonHeaderRequest extends JsonRequest<JsonHeaderRequest.JsonHeaderO
                             response.data,
                             HttpHeaderParser.parseCharset(response.headers, PROTOCOL_CHARSET));
 
-
+            if(jsonString.startsWith("{"))
+                jsonString = "[" + jsonString + "]";
 
             Map<String,String> headers = response.headers;
             JSONArray jsonObject = null;
             if(jsonString.equals("null") || jsonString.equals("[]"))
-                jsonObject = null;
+                jsonObject = new JSONArray();
             else
                 jsonObject = new JSONArray(jsonString);
 
@@ -62,6 +64,7 @@ public class JsonHeaderRequest extends JsonRequest<JsonHeaderRequest.JsonHeaderO
         Map<String, String> headers;
         JSONArray response;
         int status;
+
         JsonHeaderObject(Map<String,String> headers, JSONArray jsonObject, int status){
             this.headers=headers;
             this.response = jsonObject;
