@@ -28,11 +28,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Fragment1 extends Fragment implements ApiCallable {
     private ApiProvider apiProvider;
     private RecyclerAdapter adapter;
     private ArrayList<Contact> list = new ArrayList<>();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_1, container, false);
@@ -40,7 +42,7 @@ public class Fragment1 extends Fragment implements ApiCallable {
         AccountData data = ab.AccountDataDao().findAccountDataLimitOne();
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview1);
         recyclerView.setHasFixedSize(true);
-        apiProvider = new ApiProvider(getActivity());
+        apiProvider = new ApiProvider(getContext());
         apiProvider.getAllContacts(data.getToken(), this);
 //        list =
         adapter = new RecyclerAdapter(getActivity(), list);
@@ -60,27 +62,26 @@ public class Fragment1 extends Fragment implements ApiCallable {
 
     @Override
     public void getResponse(ApiProvider.RequestType type, JsonHeaderRequest.JsonHeaderObject response) {
-        JSONArray responsebody;
-        int cnt = 0;
-        Contact Contact = new Contact();
-        if (type == ApiProvider.RequestType.GET_ALL_CONTACTS) {
-            responsebody = response.getResponse();
-            while (responsebody.length()>cnt) {
-                try {
-                    JSONObject jsonObject = responsebody.getJSONObject(cnt);
-                    String username = jsonObject.getString("name");
-                    String userphnumber = jsonObject.getString("phone_number");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
+        JSONArray jsonArray = response.getResponse();
+        List<Contact> contacts = new ArrayList<>();
 
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject object = jsonArray.getJSONObject(i);
+                String name = object.getString("name");
+                String phoneNumber = object.getString("phone_number");
+                contacts.add(new Contact(name, phoneNumber));
+            }
+        }catch (JSONException ex){
+            ex.printStackTrace();
         }
+        adapter.setList(contacts);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void getError(VolleyError error) {
-
+        System.out.println(error);
     }
 }
 //public class Fragment1 extends Fragment implements View.OnClickListener {
