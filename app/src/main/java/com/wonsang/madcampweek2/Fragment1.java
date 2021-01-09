@@ -15,24 +15,72 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.VolleyError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.wonsang.madcampweek2.api.ApiCallable;
+import com.wonsang.madcampweek2.api.ApiProvider;
+import com.wonsang.madcampweek2.api.JsonHeaderRequest;
+import com.wonsang.madcampweek2.model.Contact;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class Fragment1 extends Fragment {
+public class Fragment1 extends Fragment implements ApiCallable {
+    private ApiProvider apiProvider;
+    private RecyclerAdapter adapter;
+    private ArrayList<Contact> list = new ArrayList<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_1, container, false);
+        AccountDatabase ab = AccountDatabase.getAppDatabase(getActivity());
+        AccountData data = ab.AccountDataDao().findAccountDataLimitOne();
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview1);
+        recyclerView.setHasFixedSize(true);
+        apiProvider = new ApiProvider(getActivity());
+        apiProvider.getAllContacts(data.getToken(), this);
+//        list =
+        adapter = new RecyclerAdapter(getActivity(), list);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         FloatingActionButton fab = rootView.findViewById(R.id.floatingActionButton2);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(getActivity().getApplicationContext(), AddContactActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(getActivity().getApplicationContext(), AddContactActivity.class);
+                startActivity(intent);
             }
         });
         return rootView;
+    }
+
+    @Override
+    public void getResponse(ApiProvider.RequestType type, JsonHeaderRequest.JsonHeaderObject response) {
+        JSONArray responsebody;
+        int cnt = 0;
+        Contact Contact = new Contact();
+        if (type == ApiProvider.RequestType.GET_ALL_CONTACTS) {
+            responsebody = response.getResponse();
+            while (responsebody.length()>cnt) {
+                try {
+                    JSONObject jsonObject = responsebody.getJSONObject(cnt);
+                    String username = jsonObject.getString("name");
+                    String userphnumber = jsonObject.getString("phone_number");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    }
+
+    @Override
+    public void getError(VolleyError error) {
+
     }
 }
 //public class Fragment1 extends Fragment implements View.OnClickListener {

@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment2">
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="GALLERY" />
+        android:layout_height="25dp"
+        android:textSize="20dp"
+        android:gravity="center_vertical"
+        android:background="#B8B8BA"
+        android:textColor="#707070"
+        android:text="ㅇㅇㅇ님의 미니홈피"/>
+<!--        android:fontFamily="@font/neodgm"-->
+<!--        android:textColor="#707070"-->
+<!--        android:text="ㅇㅇㅇ님의 미니홈피"/>-->
 
-</FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/photo_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </androidx.recyclerview.widget.RecyclerView>
+<!--        tools:listitem="@layout/item_photo"/>-->
+
+</LinearLayout>

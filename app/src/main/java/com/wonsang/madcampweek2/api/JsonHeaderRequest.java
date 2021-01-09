@@ -11,6 +11,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,13 +21,16 @@ import java.util.Map;
 
 public class JsonHeaderRequest extends JsonRequest<JsonHeaderRequest.JsonHeaderObject> {
 
-    public JsonHeaderRequest(int method, String url, @Nullable String requestBody, Response.Listener<JsonHeaderObject> listener, @Nullable Response.ErrorListener errorListener) {
-        super(method, url, requestBody, listener, errorListener);
+    private Map<String, String> headers;
+
+    public JsonHeaderRequest(int method, String url, @Nullable JSONObject json, Response.Listener<JsonHeaderObject> listener, @Nullable Response.ErrorListener errorListener) {
+        super(method, url, (json == null) ? null : json.toString(), listener, errorListener);
+        headers = new HashMap<>();
     }
 
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
-        return new HashMap<>();
+        return headers;
     }
 
     @Override
@@ -37,8 +41,15 @@ public class JsonHeaderRequest extends JsonRequest<JsonHeaderRequest.JsonHeaderO
                             response.data,
                             HttpHeaderParser.parseCharset(response.headers, PROTOCOL_CHARSET));
 
+
+
             Map<String,String> headers = response.headers;
-            JSONObject jsonObject = new JSONObject(jsonString);
+            JSONArray jsonObject = null;
+            if(jsonString.equals("null") || jsonString.equals("[]"))
+                jsonObject = null;
+            else
+                jsonObject = new JSONArray(jsonString);
+
             int statusCode = response.statusCode;
             JsonHeaderObject object = new JsonHeaderObject(headers, jsonObject, statusCode);
             return Response.success(object, HttpHeaderParser.parseCacheHeaders(response));
@@ -49,15 +60,15 @@ public class JsonHeaderRequest extends JsonRequest<JsonHeaderRequest.JsonHeaderO
 
     public static class JsonHeaderObject {
         Map<String, String> headers;
-        JSONObject response;
+        JSONArray response;
         int status;
-        JsonHeaderObject(Map<String,String> headers, JSONObject jsonObject, int status){
+        JsonHeaderObject(Map<String,String> headers, JSONArray jsonObject, int status){
             this.headers=headers;
             this.response = jsonObject;
             this.status = status;
         }
 
-        public JSONObject getResponse() {
+        public JSONArray getResponse() {
             return response;
         }
         public Map<String, String> getHeaders() {

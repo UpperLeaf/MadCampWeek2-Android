@@ -7,12 +7,17 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link com.example.madcamp2020.Fragment2#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class Fragment2 extends Fragment {
+import com.android.volley.VolleyError;
+import com.wonsang.madcampweek2.api.ApiCallable;
+import com.wonsang.madcampweek2.api.ApiProvider;
+import com.wonsang.madcampweek2.api.JsonHeaderRequest;
+
+///**
+// * A simple {@link Fragment} subclass.
+// * Use the {@link com.example.Fragment2#newInstance} factory method to
+// * create an instance of this fragment.
+// */
+public class Fragment2 extends Fragment implements ApiCallable {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -59,5 +64,15 @@ public class Fragment2 extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_2, container, false);
+    }
+
+    @Override
+    public void getResponse(ApiProvider.RequestType type, JsonHeaderRequest.JsonHeaderObject response) {
+
+    }
+
+    @Override
+    public void getError(VolleyError error) {
+
     }
 }

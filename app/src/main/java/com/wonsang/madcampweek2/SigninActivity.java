@@ -34,31 +34,26 @@ public class SigninActivity extends AppCompatActivity implements ApiCallable {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GoogleSignInOptions gso =
-                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(getString(R.string.client_id))
-                        .requestProfile()
-                        .requestEmail()
-                        .build();
+        setContentView(R.layout.sign_in);
+        signInButton = findViewById(R.id.sign_button);
+        signInButton.setSize(SignInButton.SIZE_STANDARD);
+
         AccountDatabase ab = AccountDatabase.getAppDatabase(this);
         LoginManagement loginManagement = LoginManagement.getInstance();
         apiProvider = new ApiProvider(this);
-
-        if (ab.AccountDataDao().getCount() == 0) {
-            setContentView(R.layout.sign_in);
-            signInButton = findViewById(R.id.sign_button);
-            signInButton.setSize(SignInButton.SIZE_STANDARD);
-            signInButton.setOnClickListener(v -> {
-
-            Intent intent = loginManagement.login(this, getString(R.string.client_id));
-            startActivityForResult(intent, 100);
-
-            });
-        }
-        else {
+        if (ab.AccountDataDao().getCount() >= 1) {
             AccountData data = ab.AccountDataDao().findAccountDataLimitOne();
             apiProvider.isValidAccessToken(data.getToken(), this);
         }
+        signInButton.setOnClickListener(v -> {
+            Intent intent = loginManagement.login(this, getString(R.string.client_id));
+            startActivityForResult(intent, 100);
+
+        });
+
+
+
+
     }
 
 
@@ -105,7 +100,14 @@ public class SigninActivity extends AppCompatActivity implements ApiCallable {
 
     @Override
     public void getError(VolleyError error) {
-        System.out.println(error);
+//        LoginManagement loginManagement = LoginManagement.getInstance();
+        AccountDatabase ab = AccountDatabase.getAppDatabase(this);
+        ab.AccountDataDao().deleteAll();
+//        revokeAccess();
+
+//        Intent intent = loginManagement.login(this, getString(R.string.client_id));
+//        startActivityForResult(intent, 100);
+
     }
 
     public static class InsertAsyncTask extends AsyncTask<AccountData, Void, Void> {

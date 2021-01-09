@@ -52,8 +52,10 @@ public class LoginManagement implements OAuthLogin{
 
         client = GoogleSignIn.getClient(context, gso);
         client.signOut();
+        client.revokeAccess();
         AccountDatabase ab = AccountDatabase.getAppDatabase(context);
         ab.AccountDataDao().deleteAll();
-        };
+        }
+
 }
 

@@ -2,6 +2,7 @@ package com.wonsang.madcampweek2;
 
 import android.accounts.Account;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -86,7 +87,9 @@ public class MainActivity extends AppCompatActivity {
                                 // 로그아웃 함수 call
 
                                 loginManagement.logout(getApplicationContext(), getString(R.string.client_id));
-                                revokeAccess();
+                                Intent intent = new Intent(getApplicationContext(), SigninActivity.class);
+                                startActivity(intent);
+//                                revokeAccess();
 
                             }
 
@@ -123,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
 //        });
 //    }
    private void revokeAccess() {
+
        mGoogleSignInClient.revokeAccess().addOnCompleteListener(this, new OnCompleteListener<Void>() {
            @Override
            public void onComplete(@NonNull Task<Void> task) {
