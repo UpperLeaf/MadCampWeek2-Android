@@ -38,7 +38,7 @@ public class EditContactActivity extends AppCompatActivity implements ApiCallabl
         String name = intent.getExtras().getString("name");
         String phNumbers = intent.getExtras().getString("phNumbers");
         apiProvider = new ApiProvider(this);
-//        Contact item = intent.getParcelableExtra("Contacts");
+
         tx1.setText(name);
         tx2.setText(phNumbers);
 
@@ -56,10 +56,9 @@ public class EditContactActivity extends AppCompatActivity implements ApiCallabl
             String newphNumbers = editPhNumber.getText().toString();
 
              apiProvider = new ApiProvider(this);
-             AccountDatabase ab = AccountDatabase.getAppDatabase(this);
-             AccountData data = ab.AccountDataDao().findAccountDataLimitOne();
+             String token = LoginManagement.getInstance().getToken(this);
              System.out.println(id);
-            apiProvider.EditContact(data.getToken(), id, position, newname, newphNumbers, this);
+            apiProvider.EditContact(token, id, position, newname, newphNumbers, this);
         }
 
 

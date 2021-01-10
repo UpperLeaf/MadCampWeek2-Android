@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.VolleyError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.wonsang.madcampweek2.AccountDatabase;
+import com.wonsang.madcampweek2.LoginManagement;
 import com.wonsang.madcampweek2.R;
 import com.wonsang.madcampweek2.adapter.GalleryAdapter;
 import com.wonsang.madcampweek2.api.ApiCallable;
@@ -70,7 +70,7 @@ public class GalleryFragment extends Fragment implements ApiCallable {
         galleryView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         adapter = new GalleryAdapter(getContext());
         galleryView.setAdapter(adapter);
-        apiProvider.getAllImages(AccountDatabase.getAppDatabase(getContext()).AccountDataDao().findAccountDataLimitOne().getToken(),this);
+        apiProvider.getAllImages(LoginManagement.getInstance().getToken(getContext()),this);
         actionButton = view.findViewById(R.id.gallery_view_camera);
         actionButton.setOnClickListener(v -> {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -118,7 +118,18 @@ public class GalleryFragment extends Fragment implements ApiCallable {
             adapter.notifyDataSetChanged();
         }
         else if(type == ApiProvider.RequestType.ADD_IMAGE){
-            System.out.println(response.getStatus());
+            try {
+                JSONArray jsonArray = response.getResponse();
+                JSONObject object = jsonArray.getJSONObject(0);
+                String title = object.getString("title");
+                String image = object.getString("image");
+                byte[] decodeImage = decoder.decode(image);
+                int pos = adapter.getItemCount();
+                adapter.getImages().add(new Image(title, decodeImage));
+                adapter.notifyItemInserted(pos);
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -131,7 +142,8 @@ public class GalleryFragment extends Fragment implements ApiCallable {
         Uri uri = Uri.fromFile(new File(currentPhotoPath));
         byte[] image = getImageContent(uri);
         byte[] encodedImage = encoder.encode(image);
-        apiProvider.addImage(AccountDatabase.getAppDatabase(getContext()).AccountDataDao().findAccountDataLimitOne().getToken()
+        String token = LoginManagement.getInstance().getToken(getContext());
+        apiProvider.addImage(token
                 ,currentPhotoPath
                 ,new String(encodedImage)
                 ,this);

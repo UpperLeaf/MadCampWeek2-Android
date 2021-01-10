@@ -20,6 +20,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.wonsang.madcampweek2.AccountData;
 import com.wonsang.madcampweek2.AccountDatabase;
 import com.wonsang.madcampweek2.AddContactActivity;
+import com.wonsang.madcampweek2.LoginManagement;
 import com.wonsang.madcampweek2.R;
 import com.wonsang.madcampweek2.adapter.RecyclerAdapter;
 import com.wonsang.madcampweek2.api.ApiCallable;
@@ -45,8 +46,6 @@ public class Fragment1 extends Fragment implements ApiCallable, View.OnClickList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
     public static int CONTACT_ADD_REQUEST = 300;
@@ -54,8 +53,7 @@ public class Fragment1 extends Fragment implements ApiCallable, View.OnClickList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_1, container, false);
-        AccountDatabase ab = AccountDatabase.getAppDatabase(getActivity());
-        AccountData data = ab.AccountDataDao().findAccountDataLimitOne();
+        String token = LoginManagement.getInstance().getToken(getContext());
         Context mContext = getActivity().getApplicationContext();
         fab_open = AnimationUtils.loadAnimation(mContext, R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(mContext, R.anim.fab_close);
@@ -70,7 +68,7 @@ public class Fragment1 extends Fragment implements ApiCallable, View.OnClickList
         fab_sub1.setOnClickListener(this);
         fab_sub2.setOnClickListener(this);
         apiProvider = new ApiProvider(getContext());
-        apiProvider.getAllContacts(data.getToken(), this);
+        apiProvider.getAllContacts(token, this);
 
         adapter = new RecyclerAdapter(getActivity(), list);
         recyclerView.setAdapter(adapter);
