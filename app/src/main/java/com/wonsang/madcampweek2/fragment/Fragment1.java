@@ -34,13 +34,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Fragment1 extends Fragment implements ApiCallable, View.OnClickListener {
+public class Fragment1 extends Fragment implements ApiCallable {
     private ApiProvider apiProvider;
     private RecyclerAdapter adapter;
     private ArrayList<Contact> list = new ArrayList<>();
-    private FloatingActionButton fab_main, fab_sub1, fab_sub2;
-    private Animation fab_open, fab_close;
-    private boolean isFabOpen = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,19 +53,10 @@ public class Fragment1 extends Fragment implements ApiCallable, View.OnClickList
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_1, container, false);
         AccountDatabase ab = AccountDatabase.getAppDatabase(getActivity());
         AccountData data = ab.AccountDataDao().findAccountDataLimitOne();
-        Context mContext = getActivity().getApplicationContext();
-        fab_open = AnimationUtils.loadAnimation(mContext, R.anim.fab_open);
-        fab_close = AnimationUtils.loadAnimation(mContext, R.anim.fab_close);
-
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview1);
         recyclerView.setHasFixedSize(true);
 
-        fab_main = (FloatingActionButton) rootView.findViewById(R.id.fab_main);
-        fab_sub1 = (FloatingActionButton) rootView.findViewById(R.id.fab_sub1);
-        fab_sub2 = (FloatingActionButton) rootView.findViewById(R.id.fab_sub2);
-        fab_main.setOnClickListener(this);
-        fab_sub1.setOnClickListener(this);
-        fab_sub2.setOnClickListener(this);
+
         apiProvider = new ApiProvider(getContext());
         apiProvider.getAllContacts(data.getToken(), this);
 
@@ -77,17 +65,12 @@ public class Fragment1 extends Fragment implements ApiCallable, View.OnClickList
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
-        FloatingActionButton fab = rootView.findViewById(R.id.fab_sub2);
+        FloatingActionButton fab = rootView.findViewById(R.id.fab_main);
         fab.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity().getApplicationContext(), AddContactActivity.class);
             getActivity().startActivityForResult(intent, CONTACT_ADD_REQUEST);
         });
 
-//        FloatingActionButton fab2 = rootView.findViewById(R.id.fab_sub1);
-//        fab2.setOnClickListener(view -> {
-//            Intent intent = new Intent(getActivity().getApplicationContext(), EditContactActivity.class);
-//            getActivity().startActivityForResult(intent, 101);
-//        });
         return rootView;
     }
 
@@ -127,45 +110,9 @@ public class Fragment1 extends Fragment implements ApiCallable, View.OnClickList
         this.adapter.notifyItemChanged(pos);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-
-            case R.id.fab_main:
-                toggleFab();
-                break;
-
-            case R.id.fab_sub1:
-                toggleFab();
-                Toast.makeText(getActivity(), "Camera Open-!", Toast.LENGTH_SHORT).show();
-                break;
-
-            case R.id.fab_sub2:
-                toggleFab();
-                Toast.makeText(getActivity(), "Map Open-!", Toast.LENGTH_SHORT).show();
-                break;
-
-        }
+    public void notifyDeleteContact(Contact contact, int pos) {
+        this.adapter.getList().remove(pos);
+        this.adapter.notifyItemRemoved(pos);
     }
-    private void toggleFab() {
-        Log.d("hi", "hi");
 
-        if (isFabOpen) {
-            fab_main.setImageResource(R.drawable.ic_add);
-            fab_sub1.startAnimation(fab_close);
-            fab_sub2.startAnimation(fab_close);
-            fab_sub1.setClickable(false);
-            fab_sub2.setClickable(false);
-            isFabOpen = false;
-
-        } else {
-            fab_main.setImageResource(R.drawable.ic_close);
-            fab_sub1.startAnimation(fab_open);
-            fab_sub2.startAnimation(fab_open);
-            fab_sub1.setClickable(true);
-            fab_sub2.setClickable(true);
-            isFabOpen = true;
-
-        }
-    }
 }

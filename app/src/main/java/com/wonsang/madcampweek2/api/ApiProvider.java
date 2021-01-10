@@ -85,6 +85,23 @@ public class ApiProvider {
         }
     }
 
+    public void DeleteContact(String token, int id, String name, String phNumbers, ApiCallable apiCallable) {
+        String requestUrl = url + "contact/" + id;
+        JSONObject object = new JSONObject();
+        try {
+            object.put("id", id);
+            object.put("name", name);
+            object.put("phone_number", phNumbers);
+            JsonHeaderRequest request = new JsonHeaderRequest(Request.Method.DELETE, requestUrl, object, response -> apiCallable.getResponse(RequestType.DELETE_CONTACTS, response), apiCallable::getError);
+            request.getHeaders().put("Authorization", token);
+            requestQueue.add(request);
+        } catch (JSONException | AuthFailureError ex) {
+            System.out.println(ex.toString());
+            throw new RuntimeException();
+
+        }
+    }
+
     public void getAllImages(String token, ApiCallable apiCallable) {
         String requestUrl = url + "picture/";
 
@@ -126,6 +143,7 @@ public class ApiProvider {
         ADD_CONTACTS,
         EDIT_CONTACTS,
         GET_ALL_IMAGES,
-        ADD_IMAGE
+        ADD_IMAGE,
+        DELETE_CONTACTS,
     }
 }

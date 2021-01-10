@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -10,13 +11,55 @@
         android:layout_height="match_parent">
     </androidx.recyclerview.widget.RecyclerView>
 
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/gallery_view_camera"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:layout_marginBottom="10dp"-->
+<!--        android:layout_marginEnd="10dp">-->
+<!--    </com.google.android.material.floatingactionbutton.FloatingActionButton>-->
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/gallery_view_camera"
+        android:id="@+id/fab_sub1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/fab_sub2"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="20dp"
+        android:backgroundTint="#ffffff"
+        android:src="@android:drawable/ic_menu_camera"
+        android:visibility="invisible"
+        app:borderWidth="0dp"
+        app:fabSize="normal" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_sub2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/fab_main"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="20dp"
+        android:backgroundTint="#ffffff"
+        android:src="@android:drawable/ic_menu_gallery"
+        android:visibility="invisible"
+        app:borderWidth="0dp"
+        app:fabSize="normal" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="10dp">
-    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        android:backgroundTint="#009688"
+        android:src="@android:drawable/ic_input_add"
+        app:borderWidth="0dp"
+        app:fabSize="normal" />
 </RelativeLayout>

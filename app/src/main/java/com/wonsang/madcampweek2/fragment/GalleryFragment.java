@@ -1,13 +1,18 @@
 package com.wonsang.madcampweek2.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,14 +45,17 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
-public class GalleryFragment extends Fragment implements ApiCallable {
+public class GalleryFragment extends Fragment implements ApiCallable, View.OnClickListener {
 
     private GalleryAdapter adapter;
     private RecyclerView galleryView;
     private ApiProvider apiProvider;
     private FloatingActionButton actionButton;
     private String currentPhotoPath;
+    private Animation fab_open, fab_close;
+    private FloatingActionButton fab_main, fab_sub1, fab_sub2;
 
+    private boolean isFabOpen = false;
     private static Base64.Encoder encoder = Base64.getEncoder();
     private static Base64.Decoder decoder = Base64.getDecoder();
     public static int CAMERA_REQUEST_CODE = 100;
@@ -60,6 +68,9 @@ public class GalleryFragment extends Fragment implements ApiCallable {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Context mContext = getActivity().getApplicationContext();
+        fab_open = AnimationUtils.loadAnimation(mContext, R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(mContext, R.anim.fab_close);
         return inflater.inflate(R.layout.fragment_2, container, false);
     }
 
@@ -70,8 +81,14 @@ public class GalleryFragment extends Fragment implements ApiCallable {
         galleryView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         adapter = new GalleryAdapter(getContext());
         galleryView.setAdapter(adapter);
+        fab_main = (FloatingActionButton) view.findViewById(R.id.fab_main);
+        fab_sub1 = (FloatingActionButton) view.findViewById(R.id.fab_sub1);
+        fab_sub2 = (FloatingActionButton) view.findViewById(R.id.fab_sub2);
+        fab_main.setOnClickListener(this);
+        fab_sub1.setOnClickListener(this);
+        fab_sub2.setOnClickListener(this);
         apiProvider.getAllImages(AccountDatabase.getAppDatabase(getContext()).AccountDataDao().findAccountDataLimitOne().getToken(),this);
-        actionButton = view.findViewById(R.id.gallery_view_camera);
+        actionButton = view.findViewById(R.id.fab_sub1);
         actionButton.setOnClickListener(v -> {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             File photoFile = createImageFile();
@@ -152,6 +169,48 @@ public class GalleryFragment extends Fragment implements ApiCallable {
         }catch (IOException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+
+            case R.id.fab_main:
+                toggleFab();
+                break;
+
+            case R.id.fab_sub1:
+                toggleFab();
+                Toast.makeText(getActivity(), "Camera Open-!", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.fab_sub2:
+                toggleFab();
+                Toast.makeText(getActivity(), "Gallery Open-!", Toast.LENGTH_SHORT).show();
+                break;
+
+        }
+    }
+    private void toggleFab() {
+        Log.d("hi", "hi");
+
+        if (isFabOpen) {
+            fab_main.setImageResource(R.drawable.ic_add);
+            fab_sub1.startAnimation(fab_close);
+            fab_sub2.startAnimation(fab_close);
+            fab_sub1.setClickable(false);
+            fab_sub2.setClickable(false);
+            isFabOpen = false;
+
+        } else {
+            fab_main.setImageResource(R.drawable.ic_close);
+            fab_sub1.startAnimation(fab_open);
+            fab_sub2.startAnimation(fab_open);
+            fab_sub1.setClickable(true);
+            fab_sub2.setClickable(true);
+            isFabOpen = true;
+
         }
     }
 }
