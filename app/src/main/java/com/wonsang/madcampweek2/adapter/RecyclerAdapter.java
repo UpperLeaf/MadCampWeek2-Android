@@ -1,4 +1,4 @@
-package com.wonsang.madcampweek2;
+package com.wonsang.madcampweek2.adapter;
 
 
 import android.app.Activity;
@@ -13,9 +13,10 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.wonsang.madcampweek2.EditContactActivity;
+import com.wonsang.madcampweek2.R;
 import com.wonsang.madcampweek2.model.Contact;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder> {

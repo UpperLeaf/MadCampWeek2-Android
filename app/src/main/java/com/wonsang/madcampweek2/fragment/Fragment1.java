@@ -1,4 +1,4 @@
-package com.wonsang.madcampweek2;
+package com.wonsang.madcampweek2.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.VolleyError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.wonsang.madcampweek2.AccountData;
+import com.wonsang.madcampweek2.AccountDatabase;
+import com.wonsang.madcampweek2.AddContactActivity;
+import com.wonsang.madcampweek2.R;
+import com.wonsang.madcampweek2.adapter.RecyclerAdapter;
 import com.wonsang.madcampweek2.api.ApiCallable;
 import com.wonsang.madcampweek2.api.ApiProvider;
 import com.wonsang.madcampweek2.api.JsonHeaderRequest;
@@ -43,6 +48,8 @@ public class Fragment1 extends Fragment implements ApiCallable, View.OnClickList
 
 
     }
+
+    public static int CONTACT_ADD_REQUEST = 300;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,7 +80,7 @@ public class Fragment1 extends Fragment implements ApiCallable, View.OnClickList
         FloatingActionButton fab = rootView.findViewById(R.id.fab_sub2);
         fab.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity().getApplicationContext(), AddContactActivity.class);
-            getActivity().startActivityForResult(intent, 100);
+            getActivity().startActivityForResult(intent, CONTACT_ADD_REQUEST);
         });
 
 //        FloatingActionButton fab2 = rootView.findViewById(R.id.fab_sub1);

@@ -6,6 +6,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.wonsang.madcampweek2.fragment.Fragment1;
+import com.wonsang.madcampweek2.fragment.Fragment3;
+import com.wonsang.madcampweek2.fragment.GalleryFragment;
+
 import java.util.ArrayList;
 
 public class ViewpagerAdapter extends FragmentPagerAdapter {
@@ -20,7 +24,7 @@ public class ViewpagerAdapter extends FragmentPagerAdapter {
 
         items = new ArrayList<Fragment>();
         items.add(new Fragment1());
-        items.add(new Fragment2());
+        items.add(new GalleryFragment());
         items.add(new Fragment3());
 
         itext.add("contact");
