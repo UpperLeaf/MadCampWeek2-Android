@@ -63,10 +63,13 @@ public class AddContactActivity extends AppCompatActivity implements ApiCallable
     public void getResponse(ApiProvider.RequestType type, JsonHeaderRequest.JsonHeaderObject response) {
         if (type == ApiProvider.RequestType.ADD_CONTACTS){
             try {
-                String name = response.getResponse().getJSONObject(0).getString("name");
-                String phoneNumber = response.getResponse().getJSONObject(0).getString("phone_number");
+                JSONObject object = response.getResponse().getJSONObject(0);
+                int id = object.getInt("id");
+                String name = object.getString("name");
+                String phoneNumber = object.getString("phone_number");
 
                 Intent intent = new Intent();
+                intent.putExtra("id", id);
                 intent.putExtra("name", name);
                 intent.putExtra("phoneNumber", phoneNumber);
                 setResult(100, intent);
