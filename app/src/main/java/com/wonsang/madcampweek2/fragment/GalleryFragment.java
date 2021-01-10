@@ -23,7 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.VolleyError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.wonsang.madcampweek2.AccountDatabase;
+import com.wonsang.madcampweek2.LoginManagement;
 import com.wonsang.madcampweek2.R;
 import com.wonsang.madcampweek2.adapter.GalleryAdapter;
 import com.wonsang.madcampweek2.api.ApiCallable;
@@ -87,9 +87,8 @@ public class GalleryFragment extends Fragment implements ApiCallable, View.OnCli
         fab_main.setOnClickListener(this);
         fab_sub1.setOnClickListener(this);
         fab_sub2.setOnClickListener(this);
-        apiProvider.getAllImages(AccountDatabase.getAppDatabase(getContext()).AccountDataDao().findAccountDataLimitOne().getToken(),this);
-        actionButton = view.findViewById(R.id.fab_sub1);
-        actionButton.setOnClickListener(v -> {
+        apiProvider.getAllImages(LoginManagement.getInstance().getToken(getContext()),this);
+        fab_sub1.setOnClickListener(v -> {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             File photoFile = createImageFile();
             Uri photoUri = FileProvider.getUriForFile(getContext(), "com.wonsang.madcampweek2.fileprovider", photoFile);
@@ -125,8 +124,9 @@ public class GalleryFragment extends Fragment implements ApiCallable, View.OnCli
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     String title = jsonObject.getString("title");
                     String image = jsonObject.getString("image");
+                    int id = jsonObject.getInt("id");
                     byte[] decodeImage = decoder.decode(image);
-                    images.add(new Image(title, decodeImage));
+                    images.add(new Image(title, decodeImage, id));
                 }
             }catch (JSONException ex){
                 ex.printStackTrace();
@@ -135,7 +135,19 @@ public class GalleryFragment extends Fragment implements ApiCallable, View.OnCli
             adapter.notifyDataSetChanged();
         }
         else if(type == ApiProvider.RequestType.ADD_IMAGE){
-            System.out.println(response.getStatus());
+            try {
+                JSONArray jsonArray = response.getResponse();
+                JSONObject object = jsonArray.getJSONObject(0);
+                String title = object.getString("title");
+                String image = object.getString("image");
+                int id = object.getInt("id");
+                byte[] decodeImage = decoder.decode(image);
+                int pos = adapter.getItemCount();
+                adapter.getImages().add(new Image(title, decodeImage, id));
+                adapter.notifyItemInserted(pos);
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -148,7 +160,8 @@ public class GalleryFragment extends Fragment implements ApiCallable, View.OnCli
         Uri uri = Uri.fromFile(new File(currentPhotoPath));
         byte[] image = getImageContent(uri);
         byte[] encodedImage = encoder.encode(image);
-        apiProvider.addImage(AccountDatabase.getAppDatabase(getContext()).AccountDataDao().findAccountDataLimitOne().getToken()
+        String token = LoginManagement.getInstance().getToken(getContext());
+        apiProvider.addImage(token
                 ,currentPhotoPath
                 ,new String(encodedImage)
                 ,this);

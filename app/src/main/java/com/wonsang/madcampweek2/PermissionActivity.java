@@ -34,8 +34,8 @@ public class PermissionActivity extends AppCompatActivity implements ApiCallable
         AccountDatabase ab = AccountDatabase.getAppDatabase(this);
         apiProvider = new ApiProvider(this);
         if (ab.AccountDataDao().getCount() >= 1) {
-            AccountData data = ab.AccountDataDao().findAccountDataLimitOne();
-            apiProvider.isValidAccessToken(data.getToken(), this);
+            String token = LoginManagement.getInstance().getToken(this);
+            apiProvider.isValidAccessToken(token, this);
         }
     }
 

@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             Contact contact = new Contact(newname, newphNumbers, id);
             Fragment1 fragment1 = (Fragment1) viewpagerAdapter.getItems().get(ViewpagerAdapter.CONTACT_POSITION);
             fragment1.notifyEditContact(contact, pos);
-        } else if (requestCode == GalleryFragment.CAMERA_REQUEST_CODE) {
+        } else if (requestCode == GalleryFragment.CAMERA_REQUEST_CODE && resultCode == -1) {
             ((GalleryFragment) viewpagerAdapter.getItem(ViewpagerAdapter.GALLERY_POSITION)).capture();
         }
     }

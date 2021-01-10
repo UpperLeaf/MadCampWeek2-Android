@@ -18,10 +18,13 @@ public class LoginManagement implements OAuthLogin{
 
     private static LoginManagement instance = new LoginManagement();
     private GoogleSignInClient client;
+    private String token;
 
     private LoginManagement() {
 
     }
+
+
 
     public static LoginManagement getInstance() {
         return instance;
@@ -36,9 +39,7 @@ public class LoginManagement implements OAuthLogin{
                         .build();
 
         client = GoogleSignIn.getClient(context, gso);
-        Intent intent = client.getSignInIntent();
-        return intent;
-//        context.startActivity(intent);
+        return client.getSignInIntent();
     }
 
     @Override
@@ -55,7 +56,12 @@ public class LoginManagement implements OAuthLogin{
         client.revokeAccess();
         AccountDatabase ab = AccountDatabase.getAppDatabase(context);
         ab.AccountDataDao().deleteAll();
-        }
+    }
 
+    public String getToken(Context context) {
+        if (token == null)
+            token = AccountDatabase.getAppDatabase(context).AccountDataDao().findAccountDataLimitOne().getToken();
+        return token;
+    }
 }
 

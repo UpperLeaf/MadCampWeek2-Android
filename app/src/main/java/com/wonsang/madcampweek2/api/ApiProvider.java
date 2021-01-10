@@ -137,6 +137,17 @@ public class ApiProvider {
         }
     }
 
+    public void deleteImage(String token, int id, ApiCallable apiCallable) throws AuthFailureError {
+        String requestUrl = url + "picture/" + id;
+        JsonHeaderRequest request = new JsonHeaderRequest(Request.Method.DELETE
+                , requestUrl
+                , null
+                , response -> apiCallable.getResponse(RequestType.DELETE_IMAGE, response)
+                , apiCallable::getError);
+        request.getHeaders().put("Authorization", token);
+        requestQueue.add(request);
+    }
+
     public enum RequestType {
         TOKEN_VALIDATION,
         GET_ALL_CONTACTS,
@@ -145,5 +156,5 @@ public class ApiProvider {
         GET_ALL_IMAGES,
         ADD_IMAGE,
         DELETE_CONTACTS,
-    }
+        DELETE_IMAGE}
 }

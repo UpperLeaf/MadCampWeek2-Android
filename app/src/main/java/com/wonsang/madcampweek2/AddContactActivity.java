@@ -54,9 +54,8 @@ public class AddContactActivity extends AppCompatActivity implements ApiCallable
     public void onClick(View v) {
         String name = etName.getText().toString();
         String phnumbers = etPhNumber.getText().toString();
-        AccountDatabase ab = AccountDatabase.getAppDatabase(this);
-        AccountData data = ab.AccountDataDao().findAccountDataLimitOne();
-        apiProvider.AddContact(data.getToken(), name, phnumbers, this);
+        String token = LoginManagement.getInstance().getToken(this);
+        apiProvider.AddContact(token, name, phnumbers, this);
     }
 
 
