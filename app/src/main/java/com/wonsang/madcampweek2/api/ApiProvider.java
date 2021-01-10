@@ -6,13 +6,10 @@ import android.util.Log;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.google.android.gms.auth.api.Auth;
-import com.wonsang.madcampweek2.model.Contact;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
 
 public class ApiProvider {
 
