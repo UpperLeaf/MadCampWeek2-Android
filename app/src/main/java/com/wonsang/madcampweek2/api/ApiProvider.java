@@ -91,10 +91,30 @@ public class ApiProvider {
         requestQueue.add(request);
     }
 
+    public void addImage(String token, String title, String image, ApiCallable apiCallable){
+        String requestUrl = url + "picture/";
+        JSONObject jsonObject = new JSONObject();
+        try {
+        jsonObject.put("title", title);
+        jsonObject.put("image", image);
+        JsonHeaderRequest request = new JsonHeaderRequest(Request.Method.POST
+                , requestUrl
+                , jsonObject
+                , response -> apiCallable.getResponse(RequestType.ADD_IMAGE, response)
+                , apiCallable::getError);
+
+            request.getHeaders().put("Authorization", token);
+            requestQueue.add(request);
+        }catch (AuthFailureError | JSONException error){
+            error.printStackTrace();
+        }
+    }
+
     public enum RequestType{
         TOKEN_VALIDATION,
         GET_ALL_CONTACTS,
         ADD_CONTACTS,
-        GET_ALL_IMAGES
+        GET_ALL_IMAGES,
+        ADD_IMAGE
     }
 }

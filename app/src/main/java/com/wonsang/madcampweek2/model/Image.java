@@ -4,9 +4,9 @@ import android.graphics.Bitmap;
 
 public class Image {
     private String title;
-    private String value;
+    private byte[] value;
 
-    public Image(String title, String value){
+    public Image(String title, byte[] value){
         this.value = value;
         this.title = title;
     }
@@ -14,13 +14,13 @@ public class Image {
     public String getTitle() {
         return title;
     }
-    public String getValue() {
+    public byte[] getValue() {
         return value;
     }
     public void setTitle(String title) {
         this.title = title;
     }
-    public void setValue(String value) {
+    public void setValue(byte[] value) {
         this.value = value;
     }
 }

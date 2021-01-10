@@ -18,7 +18,8 @@ import com.wonsang.madcampweek2.api.JsonHeaderRequest;
 public class PermissionActivity extends AppCompatActivity implements ApiCallable {
 
     private static final String[] PERMISSIONS = {
-            Manifest.permission.CAMERA
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
     private ApiProvider apiProvider;

@@ -36,6 +36,8 @@ public class Fragment1 extends Fragment implements ApiCallable, View.OnClickList
     private RecyclerAdapter adapter;
     private ArrayList<Contact> list = new ArrayList<>();
 
+    public static int CONTACT_ADD_REQUEST = 300;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_1, container, false);
@@ -53,7 +55,7 @@ public class Fragment1 extends Fragment implements ApiCallable, View.OnClickList
         FloatingActionButton fab = rootView.findViewById(R.id.fab_main);
         fab.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity().getApplicationContext(), AddContactActivity.class);
-            getActivity().startActivityForResult(intent, 100);
+            getActivity().startActivityForResult(intent, CONTACT_ADD_REQUEST);
         });
         return rootView;
     }

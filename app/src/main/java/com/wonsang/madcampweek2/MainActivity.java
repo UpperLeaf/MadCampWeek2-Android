@@ -3,6 +3,7 @@ package com.wonsang.madcampweek2;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -11,6 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.wonsang.madcampweek2.fragment.Fragment1;
+import com.wonsang.madcampweek2.fragment.GalleryFragment;
 import com.wonsang.madcampweek2.model.Contact;
 
 import java.util.ArrayList;
@@ -42,12 +44,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && data != null) {
+        if (requestCode == Fragment1.CONTACT_ADD_REQUEST && data != null) {
             String name = data.getStringExtra("name");
             String phoneNumber = data.getStringExtra("phoneNumber");
             Contact contact = new Contact(name, phoneNumber);
             Fragment1 fragment1 = (Fragment1) viewpagerAdapter.getItems().get(ViewpagerAdapter.CONTACT_POSITION);
             fragment1.notifyAddContact(contact);
+        }
+        else if(requestCode == GalleryFragment.CAMERA_REQUEST_CODE){
+            ((GalleryFragment)viewpagerAdapter.getItem(ViewpagerAdapter.GALLERY_POSITION)).capture();
         }
     }
 

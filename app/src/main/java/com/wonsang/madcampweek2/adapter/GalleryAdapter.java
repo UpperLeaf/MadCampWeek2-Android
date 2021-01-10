@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.wonsang.madcampweek2.R;
 import com.wonsang.madcampweek2.model.Image;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryViewHolder> {
@@ -29,6 +30,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryViewHolder> {
 
     public GalleryAdapter(Context context) {
         this.context = context;
+        this.images = new ArrayList<>();
     }
 
     @NonNull
@@ -40,7 +42,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull GalleryViewHolder holder, int position) {
-        Glide.with(context).load(images.get(position).getValue()).into(holder.getImageView());
+       Glide.with(context).load(images.get(position).getValue()).into(holder.getImageView());
     }
 
     @Override

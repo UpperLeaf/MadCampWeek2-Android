@@ -22,7 +22,6 @@ public abstract class AccountDatabase extends RoomDatabase {
                     .allowMainThreadQueries()
                     .build();
         }
-
         return INSTANCE;
     }
 
