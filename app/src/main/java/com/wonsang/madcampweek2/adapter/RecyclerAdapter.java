@@ -1,15 +1,19 @@
 package com.wonsang.madcampweek2.adapter;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.wonsang.madcampweek2.EditContactActivity;
 import com.wonsang.madcampweek2.R;
 import com.wonsang.madcampweek2.model.Contact;
 
@@ -69,6 +73,27 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder
             super(view);
             wordText = (TextView) view.findViewById(R.id.wordText);
             meaningText = (TextView) view.findViewById(R.id.meaningText);
+            view.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+
+                    int pos = getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION) {
+                        Intent intent = new Intent(v.getContext(), EditContactActivity.class);
+                        //intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
+                        Contact item = list.get(pos);
+                        intent.putExtra("id", item.getId());
+                        intent.putExtra("position", pos);
+                        intent.putExtra("name", item.getName());
+                        intent.putExtra("phNumbers", item.getPhoneNumber());
+                        Context context = v.getContext();
+                        ((Activity)(context)).startActivityForResult(intent, 101);
+                    }
+                }
+
+            });
         }
+
     }
+
 }

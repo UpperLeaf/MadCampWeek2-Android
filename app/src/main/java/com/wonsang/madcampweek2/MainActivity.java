@@ -3,7 +3,6 @@ package com.wonsang.madcampweek2;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -50,9 +49,17 @@ public class MainActivity extends AppCompatActivity {
             Contact contact = new Contact(name, phoneNumber);
             Fragment1 fragment1 = (Fragment1) viewpagerAdapter.getItems().get(ViewpagerAdapter.CONTACT_POSITION);
             fragment1.notifyAddContact(contact);
-        }
-        else if(requestCode == GalleryFragment.CAMERA_REQUEST_CODE){
-            ((GalleryFragment)viewpagerAdapter.getItem(ViewpagerAdapter.GALLERY_POSITION)).capture();
+        } else if (requestCode == 101 && data != null) {
+            int id = data.getExtras().getInt("id");
+            int pos = data.getExtras().getInt("position");
+            System.out.println(pos);
+            String newname = data.getStringExtra("name");
+            String newphNumbers = data.getStringExtra("phoneNumber");
+            Contact contact = new Contact(newname, newphNumbers, id);
+            Fragment1 fragment1 = (Fragment1) viewpagerAdapter.getItems().get(ViewpagerAdapter.CONTACT_POSITION);
+            fragment1.notifyEditContact(contact, pos);
+        } else if (requestCode == GalleryFragment.CAMERA_REQUEST_CODE) {
+            ((GalleryFragment) viewpagerAdapter.getItem(ViewpagerAdapter.GALLERY_POSITION)).capture();
         }
     }
 
