@@ -55,9 +55,9 @@ public class EditContactActivity extends AppCompatActivity implements ApiCallabl
             String newname = editName.getText().toString();
             String newphNumbers = editPhNumber.getText().toString();
 
-             apiProvider = new ApiProvider(this);
-             String token = LoginManagement.getInstance().getToken(this);
-             System.out.println(id);
+            apiProvider = new ApiProvider(this);
+            String token = LoginManagement.getInstance().getToken(this);
+            System.out.println(id);
             apiProvider.EditContact(token, id, position, newname, newphNumbers, this);
         }
 

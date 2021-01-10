@@ -108,8 +108,9 @@ public class GalleryFragment extends Fragment implements ApiCallable {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     String title = jsonObject.getString("title");
                     String image = jsonObject.getString("image");
+                    int id = jsonObject.getInt("id");
                     byte[] decodeImage = decoder.decode(image);
-                    images.add(new Image(title, decodeImage));
+                    images.add(new Image(title, decodeImage, id));
                 }
             }catch (JSONException ex){
                 ex.printStackTrace();
@@ -123,9 +124,10 @@ public class GalleryFragment extends Fragment implements ApiCallable {
                 JSONObject object = jsonArray.getJSONObject(0);
                 String title = object.getString("title");
                 String image = object.getString("image");
+                int id = object.getInt("id");
                 byte[] decodeImage = decoder.decode(image);
                 int pos = adapter.getItemCount();
-                adapter.getImages().add(new Image(title, decodeImage));
+                adapter.getImages().add(new Image(title, decodeImage, id));
                 adapter.notifyItemInserted(pos);
             }catch (JSONException e){
                 e.printStackTrace();
