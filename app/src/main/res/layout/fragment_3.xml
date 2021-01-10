@@ -6,9 +6,21 @@
     tools:context=".Fragment3">
 
     <!-- TODO: Update blank fragment layout -->
+<!--    <TextView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:text="FREE" />-->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="FREE" />
+        android:layout_height="25dp"
+        android:textSize="20dp"
+        android:gravity="center_vertical"
+        android:background="#B8B8BA"
+        android:textColor="#707070"
+        android:text="ㅇㅇㅇ님의 미니홈피"/>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </FrameLayout>

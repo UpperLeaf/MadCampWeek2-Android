@@ -59,17 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         for(int i=0;i<3;i++) tab.getTabAt(i).setIcon(images.get(i));
     }
-//        setContentView(R.layout.activity_main);
-//        mResultTextView =  findViewById(R.id.ab_content);
-//        AccountDatabase ab = AccountDatabase.getAppDatabase(this);
-//        ab.AccountDataDao().getAll().observe(this, new Observer<List<AccountData>>() {
-//            @Override
-//            public void onChanged(List<AccountData> todos) {
-//                mResultTextView.setText(todos.toString());
-//            }
-//        });
 
-//        mResultTextView.setText(ab.AccountDataDao().getAll().toString());
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -80,6 +70,18 @@ public class MainActivity extends AppCompatActivity {
             Contact contact = new Contact(name, phoneNumber);
             Fragment1 fragment1 = (Fragment1) viewpagerAdapter.getItems().get(ViewpagerAdapter.CONTACT_POSITION);
             fragment1.notifyAddContact(contact);
+        }
+
+        else if (requestCode == 101 && data!= null) {
+            int id = data.getExtras().getInt("id");
+            int pos = data.getExtras().getInt("position");
+            System.out.println(pos);
+            String newname = data.getStringExtra("name");
+            String newphNumbers = data.getStringExtra("phoneNumber");
+            Contact contact = new Contact( newname, newphNumbers, id);
+            Fragment1 fragment1 = (Fragment1) viewpagerAdapter.getItems().get(ViewpagerAdapter.CONTACT_POSITION);
+            fragment1.notifyEditContact(contact, pos);
+
         }
     }
 
@@ -149,16 +151,5 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 //    }
-   private void revokeAccess() {
-
-       mGoogleSignInClient.revokeAccess().addOnCompleteListener(this, new OnCompleteListener<Void>() {
-           @Override
-           public void onComplete(@NonNull Task<Void> task) {
-
-           }
-       });
-   }
-
-
-    }
+}
 

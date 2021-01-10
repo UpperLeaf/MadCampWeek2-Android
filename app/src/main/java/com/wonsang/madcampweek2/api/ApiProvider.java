@@ -58,7 +58,7 @@ public class ApiProvider {
     }
 
     public void AddContact(String token, String name, String phNumbers, ApiCallable apiCallable) {
-        String requestUrl = url + "contact/";
+        String requestUrl = url + "contact/" ;
         try {
             JSONObject object = new JSONObject();
             object.put("name", name);
@@ -74,9 +74,27 @@ public class ApiProvider {
         }
     }
 
+    public void EditContact(String token, int id, int position, String newname, String newphNumbers, ApiCallable apiCallable) {
+        String requestUrl = url +"contact/" + id ;
+        JSONObject object = new JSONObject();
+        try {
+            object.put("name", newname);
+            object.put("phone_number", newphNumbers);
+            JsonHeaderRequest request = new JsonHeaderRequest(Request.Method.PUT, requestUrl, object, response -> apiCallable.getResponse(RequestType.EDIT_CONTACTS, response), apiCallable::getError);
+            request.getHeaders().put("Authorization", token);
+            requestQueue.add(request);
+
+        } catch (JSONException | AuthFailureError ex) {
+            System.out.println(ex.toString());
+            throw new RuntimeException();
+        }
+
+    }
+
     public enum RequestType{
         TOKEN_VALIDATION,
         GET_ALL_CONTACTS,
         ADD_CONTACTS,
+        EDIT_CONTACTS,
     }
 }
