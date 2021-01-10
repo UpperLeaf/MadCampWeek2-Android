@@ -1,5 +1,6 @@
 package com.wonsang.madcampweek2.adapter;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,11 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull GalleryViewHolder holder, int position) {
        Glide.with(context).load(images.get(position).getValue()).into(holder.getImageView());
+       holder.getImageView().setOnClickListener(v -> {
+           Dialog dialog = new ImageDialog(context, images.get(position).getValue());
+           dialog.setCancelable(true);
+           dialog.show();
+       });
     }
 
     @Override
@@ -53,11 +59,11 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryViewHolder> {
 
 class GalleryViewHolder extends RecyclerView.ViewHolder {
 
+    private Image image;
     private ImageView imageView;
 
     public GalleryViewHolder(@NonNull View itemView) {
         super(itemView);
-
         this.imageView = itemView.findViewById(R.id.gallery_view_item_image);
     }
 
