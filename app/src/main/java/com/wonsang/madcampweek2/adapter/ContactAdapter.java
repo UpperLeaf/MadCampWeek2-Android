@@ -3,7 +3,6 @@ package com.wonsang.madcampweek2.adapter;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.VolleyError;
@@ -24,7 +22,6 @@ import com.wonsang.madcampweek2.AccountDatabase;
 import com.wonsang.madcampweek2.ContactDialog;
 import com.wonsang.madcampweek2.EditContactActivity;
 import com.wonsang.madcampweek2.R;
-import com.wonsang.madcampweek2.SignInActivity;
 import com.wonsang.madcampweek2.api.ApiCallable;
 import com.wonsang.madcampweek2.api.ApiProvider;
 import com.wonsang.madcampweek2.api.JsonHeaderRequest;
@@ -32,13 +29,13 @@ import com.wonsang.madcampweek2.model.Contact;
 
 import java.util.List;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder> implements ApiCallable {
+public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> implements ApiCallable {
 
     private Context context;
     private List<Contact> list;
     private ApiProvider apiProvider;
     private int deletepos;
-    public RecyclerAdapter(Context context, List<Contact> list) {
+    public ContactAdapter(Context context, List<Contact> list) {
         this.context = context;
         this.list = list;
     }
@@ -68,7 +65,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder
         // 각 위치에 문자열 세팅
         int itemposition = position;
         holder.wordText.setText(list.get(itemposition).getName());
-        holder.meaningText.setText(list.get(itemposition).getPhoneNumber());
+        holder.meaningText.setText(list.get(itemposition).getEmail());
         Log.e("StudyApp", "onBindViewHolder" + itemposition);
     }
 
@@ -110,7 +107,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder
                         intent.putExtra("id", item.getId());
                         intent.putExtra("position", pos);
                         intent.putExtra("name", item.getName());
-                        intent.putExtra("phNumbers", item.getPhoneNumber());
+                        intent.putExtra("email", item.getEmail());
                         Context context = v.getContext();
                         ((Activity)(context)).startActivityForResult(intent, 101);
                     }
@@ -125,18 +122,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder
                     Contact item = list.get(pos);
                     int itemid = item.getId();
                     String name = item.getName();
-                    String phNumbers = item.getPhoneNumber();
+                    String email = item.getEmail();
                     if(pos!= RecyclerView.NO_POSITION) {
                         apiProvider = new ApiProvider(context);
                         AccountDatabase ab = AccountDatabase.getAppDatabase(context);
                         AccountData data = ab.AccountDataDao().findAccountDataLimitOne();
                         ContactDialog cd = new ContactDialog(context, item, itemid, pos,apiCallable,R.style.Theme_AppCompat_Dialog_Alert);
-                        cd.setMessage(name + " / " + phNumbers +"삭제 하시겠습니까?")
+                        cd.setMessage(name + " / " + email +"삭제 하시겠습니까?")
                                 .setCancelable(false)
                                 .setPositiveButton("네", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        apiProvider.DeleteContact(data.getToken(), itemid, name, phNumbers, apiCallable);
+                                        apiProvider.DeleteContact(data.getToken(), itemid, name, email, apiCallable);
                                         dialog.dismiss();
                                     }
                                 }).setNegativeButton("아니오",
@@ -144,7 +141,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder
                                     dialog.cancel();
                                 });
                         AlertDialog alert = cd.create();
-                        alert.setTitle("로그아웃");
+                        alert.setTitle("삭제");
                         alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(255, 62, 79, 92)));
                         alert.show();
                         alert.setOnDismissListener(dialog -> {

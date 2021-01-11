@@ -74,7 +74,7 @@ public class SignInActivity extends AppCompatActivity {
             Log.d("Name 3: ", m3);
             Log.d("Email :", email);
 
-            ab.AccountDataDao().insert(new AccountData(m4));
+            ab.AccountDataDao().insert(new AccountData(m4, email));
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         } catch (Exception e) {

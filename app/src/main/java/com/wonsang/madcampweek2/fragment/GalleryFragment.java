@@ -50,7 +50,6 @@ public class GalleryFragment extends Fragment implements ApiCallable, View.OnCli
     private GalleryAdapter adapter;
     private RecyclerView galleryView;
     private ApiProvider apiProvider;
-    private FloatingActionButton actionButton;
     private String currentPhotoPath;
     private Animation fab_open, fab_close;
     private FloatingActionButton fab_main, fab_sub1, fab_sub2;

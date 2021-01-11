@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MadCampWeek2"
         android:usesCleartextTraffic="true">
-        <activity android:name=".DeleteContactActivity"></activity>
+        <activity android:name=".ShowBlogActivity"></activity>
+        <activity android:name=".DeleteContactActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

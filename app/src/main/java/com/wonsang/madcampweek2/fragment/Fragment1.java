@@ -3,13 +3,9 @@ package com.wonsang.madcampweek2.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,12 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.VolleyError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.wonsang.madcampweek2.AccountData;
-import com.wonsang.madcampweek2.AccountDatabase;
 import com.wonsang.madcampweek2.AddContactActivity;
 import com.wonsang.madcampweek2.LoginManagement;
 import com.wonsang.madcampweek2.R;
-import com.wonsang.madcampweek2.adapter.RecyclerAdapter;
+import com.wonsang.madcampweek2.adapter.ContactAdapter;
 import com.wonsang.madcampweek2.api.ApiCallable;
 import com.wonsang.madcampweek2.api.ApiProvider;
 import com.wonsang.madcampweek2.api.JsonHeaderRequest;
@@ -37,7 +31,7 @@ import java.util.List;
 
 public class Fragment1 extends Fragment implements ApiCallable {
     private ApiProvider apiProvider;
-    private RecyclerAdapter adapter;
+    private ContactAdapter adapter;
     private ArrayList<Contact> list = new ArrayList<>();
 
     @Override
@@ -61,7 +55,7 @@ public class Fragment1 extends Fragment implements ApiCallable {
         apiProvider = new ApiProvider(getContext());
         apiProvider.getAllContacts(token, this);
 
-        adapter = new RecyclerAdapter(getActivity(), list);
+        adapter = new ContactAdapter(getActivity(), list);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -85,8 +79,8 @@ public class Fragment1 extends Fragment implements ApiCallable {
                 JSONObject object = jsonArray.getJSONObject(i);
                 int id = object.getInt("id");
                 String name = object.getString("name");
-                String phoneNumber = object.getString("phone_number");
-                contacts.add(new Contact(name, phoneNumber, id));
+                String email = object.getString("email");
+                contacts.add(new Contact(name, email, id));
             }
         }catch (JSONException ex){
             ex.printStackTrace();

@@ -9,8 +9,10 @@ public class AccountData {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String token;
-    public AccountData(String token) {
+    private String email;
+    public AccountData(String token, String email) {
         this.token = token;
+        this.email = email;
     }
 
     public int getId() {
@@ -27,6 +29,10 @@ public class AccountData {
     public void setToken(String token) {
         this.token = token;
     }
+
+    public String getEmail() {return email;}
+
+    public void setEmail(String email) {this.email = email;}
 
     @Override
     public String toString() {

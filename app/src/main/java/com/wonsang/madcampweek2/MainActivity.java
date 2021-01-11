@@ -45,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Fragment1.CONTACT_ADD_REQUEST && data != null) {
             String name = data.getStringExtra("name");
-            String phoneNumber = data.getStringExtra("phoneNumber");
-            Contact contact = new Contact(name, phoneNumber);
+            String email = data.getStringExtra("email");
+            Contact contact = new Contact(name, email);
             Fragment1 fragment1 = (Fragment1) viewpagerAdapter.getItems().get(ViewpagerAdapter.CONTACT_POSITION);
             fragment1.notifyAddContact(contact);
         } else if (requestCode == 101 && data != null) {
@@ -54,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
             int pos = data.getExtras().getInt("position");
             System.out.println(pos);
             String newname = data.getStringExtra("name");
-            String newphNumbers = data.getStringExtra("phoneNumber");
-            Contact contact = new Contact(newname, newphNumbers, id);
+            String newEmail = data.getStringExtra("email");
+            Contact contact = new Contact(newname, newEmail, id);
             Fragment1 fragment1 = (Fragment1) viewpagerAdapter.getItems().get(ViewpagerAdapter.CONTACT_POSITION);
             fragment1.notifyEditContact(contact, pos);
         } else if (requestCode == GalleryFragment.CAMERA_REQUEST_CODE && resultCode == -1) {

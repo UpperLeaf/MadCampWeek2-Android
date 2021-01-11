@@ -6,6 +6,7 @@ import android.util.Log;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.wonsang.madcampweek2.AccountDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,12 +54,12 @@ public class ApiProvider {
         requestQueue.add(request);
     }
 
-    public void AddContact(String token, String name, String phNumbers, ApiCallable apiCallable) {
+    public void AddContact(String token, String name, String email, ApiCallable apiCallable) {
         String requestUrl = url + "contact/";
         try {
             JSONObject object = new JSONObject();
             object.put("name", name);
-            object.put("phone_number", phNumbers);
+            object.put("email", email);
             JsonHeaderRequest request = new JsonHeaderRequest(Request.Method.POST, requestUrl, object, response -> apiCallable.getResponse(RequestType.ADD_CONTACTS, response), apiCallable::getError);
             request.getHeaders().put("Authorization", token);
             requestQueue.add(request);
@@ -69,12 +70,12 @@ public class ApiProvider {
         }
     }
 
-    public void EditContact(String token, int id, int position, String newname, String newphNumbers, ApiCallable apiCallable) {
+    public void EditContact(String token, int id, int position, String newname, String newemail, ApiCallable apiCallable) {
         String requestUrl = url + "contact/" + id;
         JSONObject object = new JSONObject();
         try {
             object.put("name", newname);
-            object.put("phone_number", newphNumbers);
+            object.put("email", newemail);
             JsonHeaderRequest request = new JsonHeaderRequest(Request.Method.PUT, requestUrl, object, response -> apiCallable.getResponse(RequestType.EDIT_CONTACTS, response), apiCallable::getError);
             request.getHeaders().put("Authorization", token);
             requestQueue.add(request);
@@ -85,13 +86,13 @@ public class ApiProvider {
         }
     }
 
-    public void DeleteContact(String token, int id, String name, String phNumbers, ApiCallable apiCallable) {
+    public void DeleteContact(String token, int id, String name, String email, ApiCallable apiCallable) {
         String requestUrl = url + "contact/" + id;
         JSONObject object = new JSONObject();
         try {
             object.put("id", id);
             object.put("name", name);
-            object.put("phone_number", phNumbers);
+            object.put("email", email);
             JsonHeaderRequest request = new JsonHeaderRequest(Request.Method.DELETE, requestUrl, object, response -> apiCallable.getResponse(RequestType.DELETE_CONTACTS, response), apiCallable::getError);
             request.getHeaders().put("Authorization", token);
             requestQueue.add(request);
@@ -148,6 +149,25 @@ public class ApiProvider {
         requestQueue.add(request);
     }
 
+    public void getMyBlog(String token, ApiCallable apiCallable) {
+        String requestUrl = url + "/blog";
+        JsonHeaderRequest request = new JsonHeaderRequest(Request.Method.GET
+                , requestUrl
+                , null
+                , response -> apiCallable.getResponse(RequestType.GET_MYBLOG, response)
+                , apiCallable::getError);
+        try {
+            request.getHeaders().put("Authorization", token);
+        } catch (AuthFailureError error) {
+            error.printStackTrace();
+        }
+        requestQueue.add(request);
+    }
+
+    public void getOtherBlog(String token, String email, ApiCallable apiCallable) {
+
+    }
+
     public enum RequestType {
         TOKEN_VALIDATION,
         GET_ALL_CONTACTS,
@@ -156,5 +176,7 @@ public class ApiProvider {
         GET_ALL_IMAGES,
         ADD_IMAGE,
         DELETE_CONTACTS,
-        DELETE_IMAGE}
+        DELETE_IMAGE,
+        GET_MYBLOG,
+        GET_OTHER_BLOG,}
 }

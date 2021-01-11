@@ -19,6 +19,7 @@ public class LoginManagement implements OAuthLogin{
     private static LoginManagement instance = new LoginManagement();
     private GoogleSignInClient client;
     private String token;
+    private String email;
 
     private LoginManagement() {
 

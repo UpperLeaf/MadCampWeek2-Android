@@ -33,7 +33,7 @@ import java.util.Map;
 public class AddContactActivity extends AppCompatActivity implements ApiCallable, View.OnClickListener{
     private TextView tv;
     private EditText etName;
-    private EditText etPhNumber;
+    private EditText etEmail;
     private Button btnSend;
     private ApiProvider apiProvider;
 
@@ -43,7 +43,7 @@ public class AddContactActivity extends AppCompatActivity implements ApiCallable
         setContentView(R.layout.activity_add_contact);
         tv = findViewById(R.id.tvMain);
         etName = findViewById(R.id.etName);
-        etPhNumber = findViewById(R.id.etPhNumber);
+        etEmail = findViewById(R.id.etPhNumber);
         btnSend = findViewById(R.id.btnSend);
 
         apiProvider = new ApiProvider(this);
@@ -53,9 +53,9 @@ public class AddContactActivity extends AppCompatActivity implements ApiCallable
     @Override
     public void onClick(View v) {
         String name = etName.getText().toString();
-        String phnumbers = etPhNumber.getText().toString();
+        String email = etEmail.getText().toString();
         String token = LoginManagement.getInstance().getToken(this);
-        apiProvider.AddContact(token, name, phnumbers, this);
+        apiProvider.AddContact(token, name, email, this);
     }
 
 
@@ -64,11 +64,11 @@ public class AddContactActivity extends AppCompatActivity implements ApiCallable
         if (type == ApiProvider.RequestType.ADD_CONTACTS){
             try {
                 String name = response.getResponse().getJSONObject(0).getString("name");
-                String phoneNumber = response.getResponse().getJSONObject(0).getString("phone_number");
+                String email = response.getResponse().getJSONObject(0).getString("email");
 
                 Intent intent = new Intent();
                 intent.putExtra("name", name);
-                intent.putExtra("phoneNumber", phoneNumber);
+                intent.putExtra("email", email);
                 setResult(100, intent);
                 finish();
             }
@@ -81,11 +81,5 @@ public class AddContactActivity extends AppCompatActivity implements ApiCallable
     @Override
     public void getError(VolleyError error) {
 
-    }
-    public void restartActivity(Activity act) {
-        Intent intent = new Intent();
-        intent.setClass(act, act.getClass());
-        finish();
-        startActivity(intent);
     }
 }

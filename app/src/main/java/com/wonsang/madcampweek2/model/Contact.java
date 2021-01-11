@@ -2,16 +2,16 @@ package com.wonsang.madcampweek2.model;
 
 public class Contact {
     private String name;
-    private String phoneNumber;
+    private String email;
     private int id;
 
-    public Contact(String name, String phoneNumber){
+    public Contact(String name, String email){
         this.name = name;
-        this.phoneNumber = phoneNumber;
+        this.email = email;
     }
 
-    public Contact(String name, String phoneNumber, int id){
-        this(name, phoneNumber);
+    public Contact(String name, String email, int id){
+        this(name, email);
         this.id = id;
     }
 
@@ -21,11 +21,11 @@ public class Contact {
     public void setName(String name) {
         this.name = name;
     }
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getEmail() {
+        return email;
     }
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setEmail(String email) {
+        this.email = email;
     }
     public int getId() {
         return id;
