@@ -67,6 +67,7 @@ public class EditContactActivity extends AppCompatActivity implements ApiCallabl
                 String name = response.getResponse().getJSONObject(0).getString("name");
                 String email = response.getResponse().getJSONObject(0).getString("email");
                 int id = response.getResponse().getJSONObject(0).getInt("id");
+
                 Intent intent = new Intent();
                 intent.putExtra("id", id);
                 intent.putExtra("name", name);

@@ -44,9 +44,11 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Fragment1.CONTACT_ADD_REQUEST && data != null) {
+            int id = data.getExtras().getInt("id");
             String name = data.getStringExtra("name");
             String email = data.getStringExtra("email");
-            Contact contact = new Contact(name, email);
+            Contact contact = new Contact(name, email, id);
+
             Fragment1 fragment1 = (Fragment1) viewpagerAdapter.getItems().get(ViewpagerAdapter.CONTACT_POSITION);
             fragment1.notifyAddContact(contact);
         } else if (requestCode == 101 && data != null) {
