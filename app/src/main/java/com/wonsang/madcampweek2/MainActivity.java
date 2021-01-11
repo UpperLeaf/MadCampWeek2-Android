@@ -51,15 +51,16 @@ public class MainActivity extends AppCompatActivity {
 
             Fragment1 fragment1 = (Fragment1) viewpagerAdapter.getItems().get(ViewpagerAdapter.CONTACT_POSITION);
             fragment1.notifyAddContact(contact);
+
         } else if (requestCode == 101 && data != null) {
             int id = data.getExtras().getInt("id");
-            int pos = data.getExtras().getInt("position");
-            System.out.println(pos);
-            String newname = data.getStringExtra("name");
+            String newName = data.getStringExtra("name");
             String newEmail = data.getStringExtra("email");
-            Contact contact = new Contact(newname, newEmail, id);
+
+            Contact contact = new Contact(newName, newEmail, id);
+
             Fragment1 fragment1 = (Fragment1) viewpagerAdapter.getItems().get(ViewpagerAdapter.CONTACT_POSITION);
-            fragment1.notifyEditContact(contact, pos);
+            fragment1.notifyEditContact(contact);
         } else if (requestCode == GalleryFragment.CAMERA_REQUEST_CODE && resultCode == -1) {
             ((GalleryFragment) viewpagerAdapter.getItem(ViewpagerAdapter.GALLERY_POSITION)).capture();
         }

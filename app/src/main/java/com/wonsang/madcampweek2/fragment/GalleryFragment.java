@@ -28,7 +28,6 @@ import com.wonsang.madcampweek2.R;
 import com.wonsang.madcampweek2.adapter.GalleryAdapter;
 import com.wonsang.madcampweek2.api.ApiCallable;
 import com.wonsang.madcampweek2.api.ApiProvider;
-import com.wonsang.madcampweek2.api.JsonHeaderRequest;
 import com.wonsang.madcampweek2.model.Image;
 
 import org.json.JSONArray;
@@ -80,9 +79,9 @@ public class GalleryFragment extends Fragment implements ApiCallable, View.OnCli
         galleryView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         adapter = new GalleryAdapter(getContext());
         galleryView.setAdapter(adapter);
-        fab_main = (FloatingActionButton) view.findViewById(R.id.fab_main);
-        fab_sub1 = (FloatingActionButton) view.findViewById(R.id.fab_sub1);
-        fab_sub2 = (FloatingActionButton) view.findViewById(R.id.fab_sub2);
+        fab_main =  view.findViewById(R.id.fab_main);
+        fab_sub1 =  view.findViewById(R.id.fab_sub1);
+        fab_sub2 =  view.findViewById(R.id.fab_sub2);
         fab_main.setOnClickListener(this);
         fab_sub1.setOnClickListener(this);
         fab_sub2.setOnClickListener(this);
@@ -113,12 +112,14 @@ public class GalleryFragment extends Fragment implements ApiCallable, View.OnCli
             return null;
         }
     }
+
+
     @Override
-    public void getResponse(ApiProvider.RequestType type, JsonHeaderRequest.JsonHeaderObject response) {
+    public void getResponse(ApiProvider.RequestType type, Object response) {
         if(type == ApiProvider.RequestType.GET_ALL_IMAGES){
             List<Image> images = new ArrayList<>();
             try {
-                JSONArray jsonArray = response.getResponse();
+                JSONArray jsonArray = (JSONArray)response;
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     String title = jsonObject.getString("title");
@@ -132,11 +133,9 @@ public class GalleryFragment extends Fragment implements ApiCallable, View.OnCli
             }
             adapter.setImages(images);
             adapter.notifyDataSetChanged();
-        }
-        else if(type == ApiProvider.RequestType.ADD_IMAGE){
+        } else if(type == ApiProvider.RequestType.ADD_IMAGE){
             try {
-                JSONArray jsonArray = response.getResponse();
-                JSONObject object = jsonArray.getJSONObject(0);
+                JSONObject object = (JSONObject)response;
                 String title = object.getString("title");
                 String image = object.getString("image");
                 int id = object.getInt("id");
@@ -144,7 +143,7 @@ public class GalleryFragment extends Fragment implements ApiCallable, View.OnCli
                 int pos = adapter.getItemCount();
                 adapter.getImages().add(new Image(title, decodeImage, id));
                 adapter.notifyItemInserted(pos);
-            }catch (JSONException e){
+            } catch (JSONException e){
                 e.printStackTrace();
             }
         }
@@ -154,6 +153,7 @@ public class GalleryFragment extends Fragment implements ApiCallable, View.OnCli
     public void getError(VolleyError error) {
         System.out.println(error);
     }
+
 
     public void capture() {
         Uri uri = Uri.fromFile(new File(currentPhotoPath));

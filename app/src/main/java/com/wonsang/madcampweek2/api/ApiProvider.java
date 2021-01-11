@@ -1,168 +1,155 @@
 package com.wonsang.madcampweek2.api;
 
+import android.app.VoiceInteractor;
 import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.wonsang.madcampweek2.AccountDatabase;
+import com.wonsang.madcampweek2.model.Contact;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
 public class ApiProvider {
 
-    private String url = "http://192.249.18.221:8080/";
+    //private String url = "http://192.249.18.221:8080/";
+    private String url = "http://172.31.0.1:8080/";
     private RequestQueue requestQueue;
 
     public ApiProvider(Context context) {
         this.requestQueue = VolleyManager.getInstance(context).getRequestQueue();
     }
 
-    public void isValidAccessToken(String token, ApiCallable apiCallable) {
+    public void isValidAccessToken(String token, ApiCallable<String> apiCallable) {
         String requestUrl = url + "token/";
-
-        JsonHeaderRequest request = new JsonHeaderRequest(Request.Method.GET
-                , requestUrl
-                , null
-                , response -> apiCallable.getResponse(RequestType.TOKEN_VALIDATION, response)
-                , apiCallable::getError);
-
-        try {
-            request.getHeaders().put("Authorization", token);
-        } catch (AuthFailureError authFailureError) {
-            Log.d("Auth Failure Error", authFailureError.getMessage());
-            throw new RuntimeException();
-        }
-
+        StringHeaderRequest request = new StringHeaderRequest(Request.Method.GET, requestUrl,
+                response -> apiCallable.getResponse(RequestType.TOKEN_VALIDATION, response), apiCallable::getError);
+        request.getHeaders().put("Authorization", token);
         requestQueue.add(request);
     }
 
-    public void getAllContacts(String token, ApiCallable apiCallable) {
+    public void getAllContacts(String token, ApiCallable<JSONArray> apiCallable) {
         String requestUrl = url + "contact/";
-
-        JsonHeaderRequest request = new JsonHeaderRequest(Request.Method.GET, requestUrl, null, response -> apiCallable.getResponse(RequestType.GET_ALL_CONTACTS, response), apiCallable::getError);
-        try {
-            request.getHeaders().put("Authorization", token);
-        } catch (AuthFailureError authFailureError) {
-            Log.d("Auth Failure Error", authFailureError.getMessage());
-            throw new RuntimeException();
-        }
-
-        requestQueue.add(request);
-    }
-
-    public void AddContact(String token, String name, String email, ApiCallable apiCallable) {
-        String requestUrl = url + "contact/";
-        try {
-            JSONObject object = new JSONObject();
-            object.put("name", name);
-            object.put("email", email);
-            JsonHeaderRequest request = new JsonHeaderRequest(Request.Method.POST, requestUrl, object, response -> apiCallable.getResponse(RequestType.ADD_CONTACTS, response), apiCallable::getError);
-            request.getHeaders().put("Authorization", token);
-            requestQueue.add(request);
-
-        } catch (JSONException | AuthFailureError ex) {
-            System.out.println(ex.toString());
-            throw new RuntimeException();
-        }
-    }
-
-    public void EditContact(String token, int id, int position, String newname, String newemail, ApiCallable apiCallable) {
-        String requestUrl = url + "contact/" + id;
-        JSONObject object = new JSONObject();
-        try {
-            object.put("name", newname);
-            object.put("email", newemail);
-            JsonHeaderRequest request = new JsonHeaderRequest(Request.Method.PUT, requestUrl, object, response -> apiCallable.getResponse(RequestType.EDIT_CONTACTS, response), apiCallable::getError);
-            request.getHeaders().put("Authorization", token);
-            requestQueue.add(request);
-
-        } catch (JSONException | AuthFailureError ex) {
-            System.out.println(ex.toString());
-            throw new RuntimeException();
-        }
-    }
-
-    public void DeleteContact(String token, int id, String name, String email, ApiCallable apiCallable) {
-        String requestUrl = url + "contact/" + id;
-        JSONObject object = new JSONObject();
-        try {
-            object.put("id", id);
-            object.put("name", name);
-            object.put("email", email);
-            JsonHeaderRequest request = new JsonHeaderRequest(Request.Method.DELETE, requestUrl, object, response -> apiCallable.getResponse(RequestType.DELETE_CONTACTS, response), apiCallable::getError);
-            request.getHeaders().put("Authorization", token);
-            requestQueue.add(request);
-        } catch (JSONException | AuthFailureError ex) {
-            System.out.println(ex.toString());
-            throw new RuntimeException();
-
-        }
-    }
-
-    public void getAllImages(String token, ApiCallable apiCallable) {
-        String requestUrl = url + "picture/";
-
-        JsonHeaderRequest request = new JsonHeaderRequest(Request.Method.GET
-                , requestUrl
+        JsonArrayHeaderRequest request = new JsonArrayHeaderRequest(Request.Method.GET, requestUrl
                 , null
-                , response -> apiCallable.getResponse(RequestType.GET_ALL_IMAGES, response)
-                , apiCallable::getError);
-        try {
-            request.getHeaders().put("Authorization", token);
-        } catch (AuthFailureError error) {
-            error.printStackTrace();
-        }
-        requestQueue.add(request);
-    }
-
-    public void addImage(String token, String title, String image, ApiCallable apiCallable) {
-        String requestUrl = url + "picture/";
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("title", title);
-            jsonObject.put("image", image);
-            JsonHeaderRequest request = new JsonHeaderRequest(Request.Method.POST
-                    , requestUrl
-                    , jsonObject
-                    , response -> apiCallable.getResponse(RequestType.ADD_IMAGE, response)
-                    , apiCallable::getError);
-
-            request.getHeaders().put("Authorization", token);
-            requestQueue.add(request);
-        } catch (AuthFailureError | JSONException error) {
-            error.printStackTrace();
-        }
-    }
-
-    public void deleteImage(String token, int id, ApiCallable apiCallable) throws AuthFailureError {
-        String requestUrl = url + "picture/" + id;
-        JsonHeaderRequest request = new JsonHeaderRequest(Request.Method.DELETE
-                , requestUrl
-                , null
-                , response -> apiCallable.getResponse(RequestType.DELETE_IMAGE, response)
+                , response -> apiCallable.getResponse(RequestType.GET_ALL_CONTACTS, response)
                 , apiCallable::getError);
         request.getHeaders().put("Authorization", token);
         requestQueue.add(request);
     }
 
-    public void getMyBlog(String token, ApiCallable apiCallable) {
-        String requestUrl = url + "/blog";
-        JsonHeaderRequest request = new JsonHeaderRequest(Request.Method.GET
-                , requestUrl
-                , null
-                , response -> apiCallable.getResponse(RequestType.GET_MYBLOG, response)
-                , apiCallable::getError);
+    public void addContact(String token, String name, String email, ApiCallable<JSONObject> apiCallable) {
+        String requestUrl = url + "contact/";
         try {
+            JSONObject object = new JSONObject();
+
+            object.put("name", name);
+            object.put("email", email);
+
+            JsonObjectHeaderRequest request
+                    = new JsonObjectHeaderRequest(Request.Method.POST
+                    ,requestUrl
+                    , object
+                    , response -> apiCallable.getResponse(RequestType.ADD_CONTACTS, response)
+                    , apiCallable::getError);
             request.getHeaders().put("Authorization", token);
-        } catch (AuthFailureError error) {
-            error.printStackTrace();
+            requestQueue.add(request);
+
+        } catch (JSONException ex) {
+            System.out.println(ex.toString());
+            throw new RuntimeException();
         }
+    }
+
+    public void editContact(String token, Contact contact, ApiCallable<JSONObject> apiCallable) {
+        String requestUrl = url + "contact/" + contact.getId();
+        JSONObject object = new JSONObject();
+        try {
+            object.put("name",  contact.getName());
+            object.put("email", contact.getEmail());
+            JsonObjectHeaderRequest request = new JsonObjectHeaderRequest(Request.Method.PUT
+                    , requestUrl
+                    , object
+                    , response -> apiCallable.getResponse(RequestType.EDIT_CONTACTS, response)
+                    , apiCallable::getError);
+            request.getHeaders().put("Authorization", token);
+            requestQueue.add(request);
+
+        } catch (JSONException ex) {
+            System.out.println(ex.toString());
+            throw new RuntimeException();
+        }
+    }
+
+    public void deleteContact(String token, int id, ApiCallable<String> apiCallable) {
+        String requestUrl = url + "contact/" + id;
+        StringHeaderRequest request = new StringHeaderRequest(Request.Method.DELETE
+                , requestUrl
+                , response -> apiCallable.getResponse(RequestType.DELETE_CONTACTS, response)
+                , apiCallable::getError);
+        request.getHeaders().put("Authorization", token);
         requestQueue.add(request);
     }
+
+    public void getAllImages(String token, ApiCallable<JSONArray> apiCallable) {
+        String requestUrl = url + "picture/";
+
+        JsonArrayHeaderRequest request = new JsonArrayHeaderRequest(Request.Method.GET, requestUrl, null,
+                response -> apiCallable.getResponse(RequestType.GET_ALL_IMAGES, response), apiCallable::getError);
+
+        request.getHeaders().put("Authorization", token);
+        requestQueue.add(request);
+    }
+
+    public void addImage(String token, String title, String image, ApiCallable<JSONObject> apiCallable) {
+        String requestUrl = url + "picture/";
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            jsonObject.put("title", title);
+            jsonObject.put("image", image);
+            JsonObjectHeaderRequest request = new JsonObjectHeaderRequest(Request.Method.POST
+                    ,requestUrl
+                    ,jsonObject
+                    ,response -> apiCallable.getResponse(RequestType.ADD_IMAGE, response)
+                    , apiCallable::getError);
+
+            request.getHeaders().put("Authorization", token);
+            requestQueue.add(request);
+        } catch (JSONException error) {
+            error.printStackTrace();
+        }
+    }
+
+    public void deleteImage(String token, int id, ApiCallable<String> apiCallable)  {
+        String requestUrl = url + "picture/" + id;
+        StringHeaderRequest request = new StringHeaderRequest(Request.Method.DELETE
+                , requestUrl
+                , response -> apiCallable.getResponse(RequestType.DELETE_IMAGE, response)
+                , apiCallable::getError);
+        request.getHeaders().put("Authorization", token);
+        requestQueue.add(request);
+    }
+//
+//    public void getMyBlog(String token, ApiCallable apiCallable) {
+//        String requestUrl = url + "/blog";
+//        JsonHeaderRequest request = new JsonHeaderRequest(Request.Method.GET
+//                , requestUrl
+//                , null
+//                , response -> apiCallable.getResponse(RequestType.GET_MYBLOG, response)
+//                , apiCallable::getError);
+//        request.getHeaders().put("Authorization", token);
+//
+//        requestQueue.add(request);
+//    }
 
     public void getOtherBlog(String token, String email, ApiCallable apiCallable) {
 

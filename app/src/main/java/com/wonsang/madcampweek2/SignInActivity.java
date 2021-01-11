@@ -3,32 +3,23 @@ package com.wonsang.madcampweek2;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.accounts.Account;
-import android.app.Activity;
-import android.app.DownloadManager;
-import android.content.Context;
+
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.android.volley.VolleyError;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.wonsang.madcampweek2.api.ApiCallable;
 import com.wonsang.madcampweek2.api.ApiProvider;
-import com.wonsang.madcampweek2.api.JsonHeaderRequest;
-
-import java.util.ArrayList;
-import java.util.Map;
 
 
-public class SignInActivity extends AppCompatActivity {
+
+public class SignInActivity extends AppCompatActivity implements ApiCallable<String>{
 
     SignInButton signInButton;
 
@@ -55,7 +46,6 @@ public class SignInActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             AccountDatabase ab = AccountDatabase.getAppDatabase(this);
             handleSignInResult(task, ab);
-
         }
     }
 
@@ -75,10 +65,23 @@ public class SignInActivity extends AppCompatActivity {
             Log.d("Email :", email);
 
             ab.AccountDataDao().insert(new AccountData(m4, email));
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            ApiProvider apiProvider = new ApiProvider(this);
+            apiProvider.isValidAccessToken(account.getIdToken(), this);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void getResponse(ApiProvider.RequestType type, String response) {
+        if (type == ApiProvider.RequestType.TOKEN_VALIDATION) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void getError(VolleyError error) {
+        System.out.println(error);
     }
 }

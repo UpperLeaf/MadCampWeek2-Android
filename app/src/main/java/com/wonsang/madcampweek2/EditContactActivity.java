@@ -11,28 +11,26 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.google.android.gms.common.api.Api;
 import com.wonsang.madcampweek2.api.ApiCallable;
 import com.wonsang.madcampweek2.api.ApiProvider;
-import com.wonsang.madcampweek2.api.JsonHeaderRequest;
 import com.wonsang.madcampweek2.model.Contact;
 
-public class EditContactActivity extends AppCompatActivity implements ApiCallable, View.OnClickListener {
-    private EditText editName;
-    private EditText editPhNumber;
+import org.json.JSONObject;
+
+public class EditContactActivity extends AppCompatActivity implements ApiCallable<JSONObject>, View.OnClickListener {
+
     private ApiProvider apiProvider;
     private int id;
-    private int position;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_contact);
-        TextView tx1 = (TextView) findViewById(R.id.wordText);
-        TextView tx2 = (TextView) findViewById(R.id.meaningText);
+        TextView tx1 = findViewById(R.id.wordText);
+        TextView tx2 = findViewById(R.id.meaningText);
         Intent intent = getIntent();
         id = intent.getExtras().getInt("id");
 
-        position = intent.getExtras().getInt("position");
         String name = intent.getExtras().getString("name");
         String email = intent.getExtras().getString("email");
         apiProvider = new ApiProvider(this);
@@ -43,36 +41,37 @@ public class EditContactActivity extends AppCompatActivity implements ApiCallabl
         Log.i("EditActivity", name);
         Log.i("EditActivity", email);
 
-        Button sub = (Button) findViewById((R.id.save_button));
+        Button sub = findViewById((R.id.save_button));
         sub.setOnClickListener(this);
     }
         @Override
         public void onClick(View v) {
-            EditText editName = (EditText) findViewById(R.id.editText1);
-            EditText editEmail = (EditText) findViewById(R.id.editText2);
+            EditText editName =  findViewById(R.id.editText1);
+            EditText editEmail =  findViewById(R.id.editText2);
+
             String newName = editName.getText().toString();
             String newEmail = editEmail.getText().toString();
 
             apiProvider = new ApiProvider(this);
             String token = LoginManagement.getInstance().getToken(this);
-            System.out.println(id);
-            apiProvider.EditContact(token, id, position, newName, newEmail, this);
+
+            apiProvider.editContact(token, new Contact(newName, newEmail, id), this);
         }
 
 
     @Override
-    public void getResponse(ApiProvider.RequestType type, JsonHeaderRequest.JsonHeaderObject response) {
+    public void getResponse(ApiProvider.RequestType type, JSONObject response) {
         if (type == ApiProvider.RequestType.EDIT_CONTACTS){
             try {
-                String name = response.getResponse().getJSONObject(0).getString("name");
-                String email = response.getResponse().getJSONObject(0).getString("email");
-                int id = response.getResponse().getJSONObject(0).getInt("id");
+                String name = response.getString("name");
+                String email = response.getString("email");
+                int id = response.getInt("id");
 
                 Intent intent = new Intent();
                 intent.putExtra("id", id);
                 intent.putExtra("name", name);
                 intent.putExtra("email", email);
-                intent.putExtra("position", position);
+
                 setResult(101, intent);
                 finish();
             }
@@ -82,8 +81,9 @@ public class EditContactActivity extends AppCompatActivity implements ApiCallabl
         }
     }
 
+
     @Override
     public void getError(VolleyError error) {
-
+        System.out.println(error);
     }
 }

@@ -1,13 +1,9 @@
 package com.wonsang.madcampweek2.adapter;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,18 +12,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.VolleyError;
-import com.wonsang.madcampweek2.AccountData;
-import com.wonsang.madcampweek2.AccountDatabase;
-import com.wonsang.madcampweek2.ContactDialog;
-import com.wonsang.madcampweek2.EditContactActivity;
+
 import com.wonsang.madcampweek2.R;
 import com.wonsang.madcampweek2.ShowBlogActivity;
 import com.wonsang.madcampweek2.api.ApiCallable;
 import com.wonsang.madcampweek2.api.ApiProvider;
-import com.wonsang.madcampweek2.api.JsonHeaderRequest;
 import com.wonsang.madcampweek2.model.Contact;
-import com.wonsang.madcampweek2.model.Post;
 
 import java.util.List;
 

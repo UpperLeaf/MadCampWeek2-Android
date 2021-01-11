@@ -13,9 +13,8 @@ import androidx.core.app.ActivityCompat;
 import com.android.volley.VolleyError;
 import com.wonsang.madcampweek2.api.ApiCallable;
 import com.wonsang.madcampweek2.api.ApiProvider;
-import com.wonsang.madcampweek2.api.JsonHeaderRequest;
 
-public class PermissionActivity extends AppCompatActivity implements ApiCallable {
+public class PermissionActivity extends AppCompatActivity implements ApiCallable<String> {
 
     private static final String[] PERMISSIONS = {
             Manifest.permission.CAMERA,
@@ -32,8 +31,8 @@ public class PermissionActivity extends AppCompatActivity implements ApiCallable
         initializeGrant();
 
         AccountDatabase ab = AccountDatabase.getAppDatabase(this);
-        apiProvider = new ApiProvider(this);
         if (ab.AccountDataDao().getCount() >= 1) {
+            apiProvider = new ApiProvider(this);
             String token = LoginManagement.getInstance().getToken(this);
             apiProvider.isValidAccessToken(token, this);
         }
@@ -68,8 +67,10 @@ public class PermissionActivity extends AppCompatActivity implements ApiCallable
         startActivity(intent);
     }
 
+
+
     @Override
-    public void getResponse(ApiProvider.RequestType type, JsonHeaderRequest.JsonHeaderObject response) {
+    public void getResponse(ApiProvider.RequestType type, String response) {
         if (type == ApiProvider.RequestType.TOKEN_VALIDATION) {
             isTokenValid = true;
         }

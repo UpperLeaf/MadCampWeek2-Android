@@ -4,7 +4,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
-public interface ApiCallable {
-    void getResponse(ApiProvider.RequestType type, JsonHeaderRequest.JsonHeaderObject response);
+import org.json.JSONObject;
+
+public interface ApiCallable<T>{
+    void getResponse(ApiProvider.RequestType type, T response);
     void getError(VolleyError error);
 }

@@ -16,13 +16,12 @@ import com.bumptech.glide.Glide;
 import com.wonsang.madcampweek2.R;
 import com.wonsang.madcampweek2.api.ApiCallable;
 import com.wonsang.madcampweek2.api.ApiProvider;
-import com.wonsang.madcampweek2.api.JsonHeaderRequest;
 import com.wonsang.madcampweek2.model.Image;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GalleryAdapter extends RecyclerView.Adapter<GalleryViewHolder> implements ApiCallable {
+public class GalleryAdapter extends RecyclerView.Adapter<GalleryViewHolder> implements ApiCallable<String> {
 
     private Context context;
     private List<Image> images;
@@ -66,7 +65,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryViewHolder> impl
     }
 
     @Override
-    public void getResponse(ApiProvider.RequestType type, JsonHeaderRequest.JsonHeaderObject response) {
+    public void getResponse(ApiProvider.RequestType type, String response) {
         if(type == ApiProvider.RequestType.DELETE_IMAGE){
             for(int i = 0; i < getImages().size(); i++){
                 if(getImages().get(i).getId() == deletedImageId) {

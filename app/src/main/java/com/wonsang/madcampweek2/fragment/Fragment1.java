@@ -19,7 +19,6 @@ import com.wonsang.madcampweek2.R;
 import com.wonsang.madcampweek2.adapter.ContactAdapter;
 import com.wonsang.madcampweek2.api.ApiCallable;
 import com.wonsang.madcampweek2.api.ApiProvider;
-import com.wonsang.madcampweek2.api.JsonHeaderRequest;
 import com.wonsang.madcampweek2.model.Contact;
 
 import org.json.JSONArray;
@@ -29,7 +28,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Fragment1 extends Fragment implements ApiCallable {
+public class Fragment1 extends Fragment implements ApiCallable<JSONArray> {
     private ApiProvider apiProvider;
     private ContactAdapter adapter;
     private ArrayList<Contact> list = new ArrayList<>();
@@ -48,14 +47,14 @@ public class Fragment1 extends Fragment implements ApiCallable {
         String token = LoginManagement.getInstance().getToken(getContext());
         Context mContext = getActivity().getApplicationContext();
 
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview1);
+        RecyclerView recyclerView = rootView.findViewById(R.id.recyclerview1);
         recyclerView.setHasFixedSize(true);
 
 
         apiProvider = new ApiProvider(getContext());
         apiProvider.getAllContacts(token, this);
 
-        adapter = new ContactAdapter(getActivity(), list);
+        adapter = new ContactAdapter(list);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -70,13 +69,11 @@ public class Fragment1 extends Fragment implements ApiCallable {
     }
 
     @Override
-    public void getResponse(ApiProvider.RequestType type, JsonHeaderRequest.JsonHeaderObject response) {
-        JSONArray jsonArray = response.getResponse();
+    public void getResponse(ApiProvider.RequestType type, JSONArray response) {
         List<Contact> contacts = new ArrayList<>();
-
         try {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject object = jsonArray.getJSONObject(i);
+            for (int i = 0; i < response.length(); i++) {
+                JSONObject object = response.getJSONObject(i);
                 int id = object.getInt("id");
                 String name = object.getString("name");
                 String email = object.getString("email");
@@ -100,9 +97,16 @@ public class Fragment1 extends Fragment implements ApiCallable {
         this.adapter.notifyItemInserted(pos);
     }
 
-    public void notifyEditContact(Contact contact, int pos) {
-        this.adapter.getList().set(pos, contact);
-        this.adapter.notifyItemChanged(pos);
+    public void notifyEditContact(Contact contact) {
+        List<Contact> contacts = adapter.getList();
+        for(int i = 0; i < contacts.size(); i++){
+            if(contacts.get(i).getId() == contact.getId()){
+                contacts.get(i).setEmail(contact.getEmail());
+                contacts.get(i).setName(contact.getName());
+                adapter.notifyItemChanged(i);
+                break;
+            }
+        }
     }
 
     public void notifyDeleteContact(Contact contact, int pos) {

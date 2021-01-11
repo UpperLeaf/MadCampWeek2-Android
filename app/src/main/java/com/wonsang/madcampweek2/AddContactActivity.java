@@ -12,25 +12,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.android.gms.common.api.Api;
 import com.wonsang.madcampweek2.api.ApiCallable;
 import com.wonsang.madcampweek2.api.ApiProvider;
-import com.wonsang.madcampweek2.api.JsonHeaderRequest;
-import com.wonsang.madcampweek2.api.VolleyManager;
 
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
 
-public class AddContactActivity extends AppCompatActivity implements ApiCallable, View.OnClickListener{
+public class AddContactActivity extends AppCompatActivity implements ApiCallable<JSONObject>, View.OnClickListener{
     private TextView tv;
     private EditText etName;
     private EditText etEmail;
@@ -55,19 +44,17 @@ public class AddContactActivity extends AppCompatActivity implements ApiCallable
         String name = etName.getText().toString();
         String email = etEmail.getText().toString();
         String token = LoginManagement.getInstance().getToken(this);
-        apiProvider.AddContact(token, name, email, this);
+        apiProvider.addContact(token, name, email, this);
     }
 
 
     @Override
-    public void getResponse(ApiProvider.RequestType type, JsonHeaderRequest.JsonHeaderObject response) {
+    public void getResponse(ApiProvider.RequestType type, JSONObject response) {
         if (type == ApiProvider.RequestType.ADD_CONTACTS){
             try {
-
-                JSONObject object = response.getResponse().getJSONObject(0);
-                int id = object.getInt("id");
-                String name = object.getString("name");
-                String email = object.getString("email");
+                String name = response.getString("name");
+                String email = response.getString("email");
+                int id = response.getInt("id");
 
                 Intent intent = new Intent();
                 intent.putExtra("id", id);
@@ -84,6 +71,6 @@ public class AddContactActivity extends AppCompatActivity implements ApiCallable
 
     @Override
     public void getError(VolleyError error) {
-
+        System.out.println(error);
     }
 }

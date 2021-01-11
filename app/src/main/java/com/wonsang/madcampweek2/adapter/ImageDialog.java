@@ -18,7 +18,7 @@ public class ImageDialog extends Dialog {
     private ImageView imageView;
     private Button button;
     private ApiProvider apiProvider;
-    private ApiCallable apiCallable;
+    private ApiCallable<String> apiCallable;
     private byte[] image;
     private int id;
 
@@ -27,7 +27,7 @@ public class ImageDialog extends Dialog {
         return id;
     }
 
-    public ImageDialog(Context context, byte[] image, int id, ApiCallable apiCallable) {
+    public ImageDialog(Context context, byte[] image, int id, ApiCallable<String> apiCallable) {
         super(context);
         this.image = image;
         this.apiProvider = new ApiProvider(context);
@@ -47,12 +47,8 @@ public class ImageDialog extends Dialog {
 
         Glide.with(getContext()).load(image).into(imageView);
         button.setOnClickListener(v -> {
-            try {
-                apiProvider.deleteImage(LoginManagement.getInstance().getToken(getContext()), id, apiCallable);
-                dismiss();
-            } catch (AuthFailureError error) {
-                error.printStackTrace();
-            }
+            apiProvider.deleteImage(LoginManagement.getInstance().getToken(getContext()), id, apiCallable);
+            dismiss();
         });
     }
 
