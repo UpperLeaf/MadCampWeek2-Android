@@ -4,10 +4,9 @@ import java.util.List;
 
 public class Blog {
     public String email;
-    public Image profile;
-    public Image banner;
+    public String profile;
+    public String banner;
     public List<Post> posts;
-//    public List<Contact> contacts;
     public String description;
 
     public String getEmail() {

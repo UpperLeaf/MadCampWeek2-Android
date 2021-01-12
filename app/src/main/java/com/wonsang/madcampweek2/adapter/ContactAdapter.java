@@ -103,8 +103,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.Holder> 
                                         (dialog, id) -> dialog.cancel());
 
                 AlertDialog alert = builder.create();
-                alert.setTitle("삭제");
-                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(255, 62, 79, 92)));
+                alert.setTitle("연락처 삭제");
+                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(255, 102, 102, 102)));
                 alert.show();
 
                 return true;

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.VolleyError;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.wonsang.madcampweek2.AccountDatabase;
 import com.wonsang.madcampweek2.LoginManagement;
 import com.wonsang.madcampweek2.R;
@@ -50,6 +51,7 @@ public class Fragment3 extends Fragment {
     private PostView postView;
     private ArrayList<Contact> list = new ArrayList<>();
     private ArrayList<Post> postlist = new ArrayList<>();
+    private FloatingActionButton fab;
 
     public Fragment3() {
         // Required empty public constructor
@@ -72,38 +74,37 @@ public class Fragment3 extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-}
 
-//      @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        // Inflate the layout for this fragment
-//        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_3, container, false);
-//        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview3);
-//        TextView introduction = rootView.findViewById(R.id.introduction);
-//        recyclerView.setHasFixedSize(true);
-//        String token = LoginManagement.getInstance().getToken(getContext());
-//        AccountDatabase ab = AccountDatabase.getAppDatabase(getContext());
-//
-//        String user_email = ab.AccountDataDao().findAccountDataLimitOne().getEmail();
+      @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_3, container, false);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview3);
+        TextView introduction = rootView.findViewById(R.id.introduction);
+        recyclerView.setHasFixedSize(true);
+        String token = LoginManagement.getInstance().getToken(getContext());
+        AccountDatabase ab = AccountDatabase.getAppDatabase(getContext());
+
+        String user_email = ab.AccountDataDao().findAccountDataLimitOne().getEmail();
+        apiProvider = new ApiProvider(getContext());
+        //apiProvider.getAllContacts(token, this);
+        contactadapter = new BlogContactAdapter(getActivity(), list);
+        recyclerView.setAdapter(contactadapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        RecyclerView recyclerView2 = (RecyclerView) rootView.findViewById(R.id.recyclerview2);
+        recyclerView2.setHasFixedSize(true);
 //        apiProvider = new ApiProvider(getContext());
-//        //apiProvider.getAllContacts(token, this);
-//        contactadapter = new BlogContactAdapter(getActivity(), list);
-//        recyclerView.setAdapter(contactadapter);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//
-//        RecyclerView recyclerView2 = (RecyclerView) rootView.findViewById(R.id.recyclerview2);
-//        recyclerView2.setHasFixedSize(true);
-////        apiProvider = new ApiProvider(getContext());
-////        apiProvider.getMyBlog(token, this);
-//        postView= new PostView(getActivity(), postlist.get(postlist.size()), 1);
-//        postlistadapter = new BlogPostAdapter(getActivity(), postlist);
-//        recyclerView2.setAdapter(postlistadapter);
-//        recyclerView2.setLayoutManager(new LinearLayoutManager(getActivity()));
-//
-//
-//        return rootView;
-//    }
+//        apiProvider.getMyBlog(token, this);
+        postView= new PostView(getActivity(), postlist.get(postlist.size()), 1);
+        postlistadapter = new BlogPostAdapter(getActivity(), postlist);
+        recyclerView2.setAdapter(postlistadapter);
+        recyclerView2.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+
+        return rootView;
+    }
 
 //    @Override
 //    public void getResponse(ApiProvider.RequestType type, JsonHeaderRequest.JsonHeaderObject response) {
@@ -162,4 +163,4 @@ public class Fragment3 extends Fragment {
 //    public void getError(VolleyError error) {
 //
 //    }
-//}
+}

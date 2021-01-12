@@ -20,8 +20,8 @@ import org.json.JSONObject;
 
 public class ApiProvider {
 
-    //private String url = "http://192.249.18.221:8080/";
-    private String url = "http://172.31.0.1:8080/";
+    private String url = "http://192.249.18.221:8080/";
+//    private String url = "http://172.31.0.1:8080/";
     private RequestQueue requestQueue;
 
     public ApiProvider(Context context) {
@@ -144,7 +144,7 @@ public class ApiProvider {
 //        JsonHeaderRequest request = new JsonHeaderRequest(Request.Method.GET
 //                , requestUrl
 //                , null
-//                , response -> apiCallable.getResponse(RequestType.GET_MYBLOG, response)
+//                , response -> apiCallable.getResponse(RequestType.GET_MY_BLOG, response)
 //                , apiCallable::getError);
 //        request.getHeaders().put("Authorization", token);
 //
@@ -155,6 +155,13 @@ public class ApiProvider {
 
     }
 
+    public void addPost(String token, String email, String title, String content, ApiCallable apiCallable) {
+        String requestUrl = url + "post/";
+                StringHeaderRequest request = new StringHeaderRequest(Request.Method.POST
+                , requestUrl, response -> apiCallable.getResponse(RequestType.ADD_POST, response), apiCallable::getError);
+        request.getHeaders().put("Authorization", token);
+        requestQueue.add(request);
+    }
     public enum RequestType {
         TOKEN_VALIDATION,
         GET_ALL_CONTACTS,
@@ -164,6 +171,9 @@ public class ApiProvider {
         ADD_IMAGE,
         DELETE_CONTACTS,
         DELETE_IMAGE,
-        GET_MYBLOG,
-        GET_OTHER_BLOG,}
+        GET_MY_BLOG,
+        GET_OTHER_BLOG,
+        ADD_POST,
+        EDIT_POST,
+        DELETE_POST,}
 }
