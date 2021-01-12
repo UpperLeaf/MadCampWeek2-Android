@@ -58,8 +58,8 @@ public class BlogContactAdapter extends RecyclerView.Adapter<BlogContactAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
-        holder.wordText.setText(contacts.get(position).getName());
-        holder.meaningText.setText(contacts.get(position).getEmail());
+        holder.wordText.setText(String.valueOf(position+1));
+        holder.meaningText.setText(contacts.get(position).getName());
         holder.view.setOnClickListener((v) -> {
             Intent intent = new Intent(context, ShowBlogActivity.class);
             intent.putExtra("email", contacts.get(position).getEmail());

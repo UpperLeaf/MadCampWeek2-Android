@@ -30,7 +30,7 @@ public class ViewpagerAdapter extends FragmentPagerAdapter {
 
         itext.add("contact");
         itext.add("gallery");
-        itext.add("health");
+        itext.add("blog");
     }
 
     public ArrayList<Fragment> getItems() {

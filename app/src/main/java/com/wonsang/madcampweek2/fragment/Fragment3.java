@@ -1,14 +1,22 @@
 package com.wonsang.madcampweek2.fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,11 +38,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-public class Fragment3 extends Fragment implements ApiCallable<JSONObject> {
+public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , View.OnClickListener {
 
     private ApiProvider apiProvider;
     private BlogContactAdapter contactAdapter;
@@ -44,7 +53,8 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> {
     private ImageView bannerImageView;
     private TextView description;
     private TextView blogTitle;
-    private FloatingActionButton fab;
+    private Animation fab_open, fab_close;
+    private FloatingActionButton fab_main, fab_sub1, fab_sub2;
 
     private TextView postTitle;
     private TextView postContent;
@@ -52,6 +62,8 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> {
     private static Base64.Decoder decoder;
 
     public static int POST_ADD_REQUEST = 400;
+    public static int PROFILE_EDIT_REQUEST = 319;
+    private boolean isFabOpen = false;
 
     public Fragment3() {
         decoder = Base64.getDecoder();
@@ -60,6 +72,9 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Context mContext = getActivity().getApplicationContext();
+        fab_open = AnimationUtils.loadAnimation(mContext, R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(mContext, R.anim.fab_close);
         apiProvider = new ApiProvider(getContext());
     }
 
@@ -95,11 +110,19 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> {
         apiProvider.getMyBlog(token, this);
         postTitle = rootView.findViewById(R.id.post_title);
         postContent = rootView.findViewById(R.id.post_content);
-        fab = rootView.findViewById(R.id.fab_main3);
-        fab.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), AddPostActivity.class);
-            getActivity().startActivityForResult(intent, POST_ADD_REQUEST);
-        });
+        fab_main =  rootView.findViewById(R.id.fab_main3);
+        fab_sub1 =  rootView.findViewById(R.id.fab_sub13);
+        fab_sub2 =  rootView.findViewById(R.id.fab_sub23);
+        fab_main.setOnClickListener(this);
+        fab_sub1.setOnClickListener(this);
+        fab_sub2.setOnClickListener(this);
+//        fab_sub1.setOnClickListener(v -> {
+//            //TODO: EditProfileActivity
+//        });
+//        fab_sub1.setOnClickListener(v -> {
+//            Intent intent = new Intent(getContext(), AddPostActivity.class);
+//            getActivity().startActivityForResult(intent, POST_ADD_REQUEST);
+//        });
 
         return rootView;
     }
@@ -122,6 +145,7 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> {
         postTitle.setText(title);
         postContent.setText(content);
     }
+
 
     @Override
     public void getResponse(ApiProvider.RequestType type, JSONObject response) {
@@ -170,6 +194,47 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> {
 
         postTitle.setText(post.getTitle());
         postContent.setText(post.getContent());
+    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+
+            case R.id.fab_main:
+                toggleFab();
+                break;
+
+            case R.id.fab_sub1:
+                toggleFab();
+                Toast.makeText(getActivity(), "Camera Open-!", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.fab_sub2:
+                toggleFab();
+                Toast.makeText(getActivity(), "Gallery Open-!", Toast.LENGTH_SHORT).show();
+                break;
+
+        }
+    }
+    private void toggleFab() {
+        Log.d("hi", "hi");
+
+        if (isFabOpen) {
+            fab_main.setImageResource(R.drawable.ic_add);
+            fab_sub1.startAnimation(fab_close);
+            fab_sub2.startAnimation(fab_close);
+            fab_sub1.setClickable(false);
+            fab_sub2.setClickable(false);
+            isFabOpen = false;
+
+        } else {
+            fab_main.setImageResource(R.drawable.ic_close);
+            fab_sub1.startAnimation(fab_open);
+            fab_sub2.startAnimation(fab_open);
+            fab_sub1.setClickable(true);
+            fab_sub2.setClickable(true);
+            isFabOpen = true;
+
+        }
     }
 
 }

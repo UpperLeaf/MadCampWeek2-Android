@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
 
             Fragment3 fragment3 = (Fragment3) viewpagerAdapter.getItems().get(ViewpagerAdapter.BLOG_POSITION);
             fragment3.notifyAddPost(post);
+        } else if (requestCode == Fragment3.PROFILE_EDIT_REQUEST && data!= null) {
+
         }
     }
 

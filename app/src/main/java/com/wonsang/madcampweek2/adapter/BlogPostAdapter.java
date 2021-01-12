@@ -41,8 +41,8 @@ public class BlogPostAdapter extends RecyclerView.Adapter<BlogPostAdapter.Holder
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
         Post post = list.get(position);
-        holder.wordText.setText(post.getTitle());
-        holder.meaningText.setText(post.getContent());
+        holder.wordText.setText(String.valueOf(position+1));
+        holder.meaningText.setText(post.getTitle());
         holder.view.setOnClickListener((v) -> fragment3.update(post.getTitle(), post.getContent()));
     }
 

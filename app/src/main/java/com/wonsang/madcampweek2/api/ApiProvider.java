@@ -182,6 +182,25 @@ public class ApiProvider {
         }
     }
 
+    public void saveProfile(String token, String newBlogTitle, String newDescription, String ImageUrl, ApiCallable<JSONObject> apiCallable) {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("blogTtle", newBlogTitle);
+            object.put("description", newDescription);
+            String requestUrl = url + "post/";
+            JsonObjectHeaderRequest request =
+                    new JsonObjectHeaderRequest(Request.Method.PUT
+                            , requestUrl
+                            , object
+                            , response -> apiCallable.getResponse(RequestType.EDIT_PROFILE, response)
+                            , apiCallable::getError);
+            request.getHeaders().put("Authorization", token);
+            requestQueue.add(request);
+        }catch (JSONException ex){
+            ex.printStackTrace();
+        }
+    }
+
 
     public enum RequestType {
         TOKEN_VALIDATION,
@@ -196,5 +215,6 @@ public class ApiProvider {
         GET_OTHER_BLOG,
         ADD_POST,
         EDIT_POST,
-        DELETE_POST,}
+        DELETE_POST,
+        EDIT_PROFILE,}
 }
