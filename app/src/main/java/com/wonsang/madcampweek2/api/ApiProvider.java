@@ -155,7 +155,7 @@ public class ApiProvider {
 
     }
 
-    public void addPost(String token, String email, String title, String content, ApiCallable apiCallable) {
+    public void addPost(String token, String title, String content, ApiCallable apiCallable) {
         String requestUrl = url + "post/";
                 StringHeaderRequest request = new StringHeaderRequest(Request.Method.POST
                 , requestUrl, response -> apiCallable.getResponse(RequestType.ADD_POST, response), apiCallable::getError);

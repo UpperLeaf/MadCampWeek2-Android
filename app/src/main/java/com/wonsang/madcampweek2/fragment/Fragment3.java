@@ -1,5 +1,6 @@
 package com.wonsang.madcampweek2.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,25 +11,19 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.VolleyError;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.wonsang.madcampweek2.AccountDatabase;
+import com.wonsang.madcampweek2.AddPostActivity;
 import com.wonsang.madcampweek2.LoginManagement;
 import com.wonsang.madcampweek2.R;
 import com.wonsang.madcampweek2.adapter.BlogContactAdapter;
 import com.wonsang.madcampweek2.adapter.BlogPostAdapter;
 import com.wonsang.madcampweek2.adapter.PostView;
-import com.wonsang.madcampweek2.api.ApiCallable;
 import com.wonsang.madcampweek2.api.ApiProvider;
 import com.wonsang.madcampweek2.model.Contact;
 import com.wonsang.madcampweek2.model.Post;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -74,7 +69,7 @@ public class Fragment3 extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    public static int POST_ADD_REQUEST = 400;
       @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -85,7 +80,6 @@ public class Fragment3 extends Fragment {
         recyclerView.setHasFixedSize(true);
         String token = LoginManagement.getInstance().getToken(getContext());
         AccountDatabase ab = AccountDatabase.getAppDatabase(getContext());
-
         String user_email = ab.AccountDataDao().findAccountDataLimitOne().getEmail();
         apiProvider = new ApiProvider(getContext());
         //apiProvider.getAllContacts(token, this);
@@ -101,7 +95,11 @@ public class Fragment3 extends Fragment {
         postlistadapter = new BlogPostAdapter(getActivity(), postlist);
         recyclerView2.setAdapter(postlistadapter);
         recyclerView2.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        FloatingActionButton fab = rootView.findViewById(R.id.fab_main);
+          fab.setOnClickListener(view -> {
+              Intent intent = new Intent(getActivity().getApplicationContext(), AddPostActivity.class);
+              getActivity().startActivityForResult(intent, POST_ADD_REQUEST);
+          });
 
         return rootView;
     }
@@ -163,4 +161,9 @@ public class Fragment3 extends Fragment {
 //    public void getError(VolleyError error) {
 //
 //    }
+    public void notifyAddPost(Post post) {
+        int pos = this.postlistadapter.getList().size();
+        this.postlistadapter.getList().add(post);
+        this.postlistadapter.notifyItemInserted(pos);
+    }
 }

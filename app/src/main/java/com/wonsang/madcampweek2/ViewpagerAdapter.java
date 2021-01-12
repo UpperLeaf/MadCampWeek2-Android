@@ -18,6 +18,7 @@ public class ViewpagerAdapter extends FragmentPagerAdapter {
 
     public static int CONTACT_POSITION = 0;
     public static int GALLERY_POSITION = 1;
+    public static int BLOG_POSITION = 2;
 
     public ViewpagerAdapter(@NonNull FragmentManager fm) {
         super(fm);
