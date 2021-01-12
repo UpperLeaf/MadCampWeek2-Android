@@ -20,9 +20,7 @@ public class PermissionActivity extends AppCompatActivity implements ApiCallable
             Manifest.permission.CAMERA,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
-
     private ApiProvider apiProvider;
-    private boolean isTokenValid;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,12 +29,16 @@ public class PermissionActivity extends AppCompatActivity implements ApiCallable
         setTheme(R.style.Theme_AppCompat_DayNight);
         initializeGrant();
 
-        AccountDatabase ab = AccountDatabase.getAppDatabase(this);
-        if (ab.AccountDataDao().getCount() >= 1) {
-            apiProvider = new ApiProvider(this);
-            String token = LoginManagement.getInstance().getToken(this);
-            apiProvider.isValidAccessToken(token, this);
-        }
+//        AccountDatabase ab = AccountDatabase.getAppDatabase(this);
+//        if (ab.AccountDataDao().getCount() >= 1) {
+//            hasToken = true;
+//            apiProvider = new ApiProvider(this);
+//            String token = LoginManagement.getInstance().getToken(this);
+//            apiProvider.isValidAccessToken(token, this);
+//        }else {
+//            hasToken = false;
+//            intentSignInActivity();
+//        }
     }
 
     @Override
@@ -56,11 +58,14 @@ public class PermissionActivity extends AppCompatActivity implements ApiCallable
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if(grantResults[0] == PackageManager.PERMISSION_GRANTED && isTokenValid){
-            intentMainActivity();
-        }
-        else
+        AccountDatabase ab = AccountDatabase.getAppDatabase(this);
+        if (ab.AccountDataDao().getCount() >= 1) {
+            apiProvider = new ApiProvider(this);
+            String token = LoginManagement.getInstance().getToken(this);
+            apiProvider.isValidAccessToken(token, this);
+        }else {
             intentSignInActivity();
+        }
     }
 
     private void intentSignInActivity() {
@@ -68,20 +73,15 @@ public class PermissionActivity extends AppCompatActivity implements ApiCallable
         startActivity(intent);
     }
 
-
-
     @Override
     public void getResponse(ApiProvider.RequestType type, String response) {
-        if (type == ApiProvider.RequestType.TOKEN_VALIDATION) {
-            isTokenValid = true;
-        }
-        else
-            isTokenValid = false;
+        intentMainActivity();
     }
 
     @Override
     public void getError(VolleyError error) {
         AccountDatabase ab = AccountDatabase.getAppDatabase(this);
         ab.AccountDataDao().deleteAll();
+        intentSignInActivity();
     }
 }

@@ -3,6 +3,7 @@ package com.wonsang.madcampweek2;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -75,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
             fragment3.notifyAddPost(post);
         } else if (requestCode == Fragment3.PROFILE_EDIT_REQUEST && data!= null) {
 
+        } else if (requestCode == GalleryFragment.CAMERA_PICK && data != null){
+            Uri selectedImage = data.getData();
+            ((GalleryFragment) viewpagerAdapter.getItem(ViewpagerAdapter.GALLERY_POSITION)).selectImage(selectedImage);
         }
     }
 

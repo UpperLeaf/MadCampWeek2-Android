@@ -57,6 +57,8 @@ public class GalleryFragment extends Fragment implements ApiCallable, View.OnCli
     private static Base64.Encoder encoder = Base64.getEncoder();
     private static Base64.Decoder decoder = Base64.getDecoder();
     public static int CAMERA_REQUEST_CODE = 100;
+    public static int CAMERA_PICK = 500;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +95,7 @@ public class GalleryFragment extends Fragment implements ApiCallable, View.OnCli
             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
             getActivity().startActivityForResult(intent, CAMERA_REQUEST_CODE);
         });
+
     }
 
     private File createImageFile() {
@@ -166,6 +169,16 @@ public class GalleryFragment extends Fragment implements ApiCallable, View.OnCli
                 ,this);
     }
 
+    public void selectImage(Uri selectedImage) {
+        byte[] image = getImageContent(selectedImage);
+        byte[] encodedImage = encoder.encode(image);
+        String token = LoginManagement.getInstance().getToken(getContext());
+        apiProvider.addImage(token
+                ,currentPhotoPath
+                ,new String(encodedImage)
+                ,this);
+    }
+
 
     public byte[] getImageContent(Uri uri){
         try {
@@ -187,26 +200,18 @@ public class GalleryFragment extends Fragment implements ApiCallable, View.OnCli
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
             case R.id.fab_main:
                 toggleFab();
                 break;
-
             case R.id.fab_sub1:
-                toggleFab();
-                Toast.makeText(getActivity(), "Camera Open-!", Toast.LENGTH_SHORT).show();
                 break;
-
             case R.id.fab_sub2:
-                toggleFab();
-                Toast.makeText(getActivity(), "Gallery Open-!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                getActivity().startActivityForResult(intent, CAMERA_PICK);
                 break;
-
         }
     }
     private void toggleFab() {
-        Log.d("hi", "hi");
-
         if (isFabOpen) {
             fab_main.setImageResource(R.drawable.ic_add);
             fab_sub1.startAnimation(fab_close);
@@ -225,4 +230,5 @@ public class GalleryFragment extends Fragment implements ApiCallable, View.OnCli
 
         }
     }
+
 }
