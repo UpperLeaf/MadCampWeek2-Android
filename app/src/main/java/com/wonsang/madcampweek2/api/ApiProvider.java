@@ -163,7 +163,6 @@ public class ApiProvider {
     }
 
     public void addPost(String token, String title, String content, ApiCallable<JSONObject> apiCallable) {
-
         JSONObject object = new JSONObject();
         try {
             object.put("title", title);
@@ -196,5 +195,6 @@ public class ApiProvider {
         GET_OTHER_BLOG,
         ADD_POST,
         EDIT_POST,
-        DELETE_POST,}
+        DELETE_POST
+    }
 }
