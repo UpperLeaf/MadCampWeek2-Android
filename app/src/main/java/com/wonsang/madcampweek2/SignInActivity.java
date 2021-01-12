@@ -49,6 +49,11 @@ public class SignInActivity extends AppCompatActivity implements ApiCallable<Str
         }
     }
 
+    @Override
+    public void onBackPressed() {
+
+    }
+
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask, AccountDatabase ab) {
         try {
 

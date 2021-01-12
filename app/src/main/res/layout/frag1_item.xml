@@ -3,13 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp">
     <TextView
         android:id="@+id/wordText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textAlignment="textStart"
+        android:textStyle="bold"
+        android:fontFamily="@font/nanumnarunpend"
         android:textSize="20sp"
         android:layout_marginStart="10dp" />
     <TextView
@@ -19,5 +22,6 @@
         android:layout_weight="1"
         android:textAlignment="textEnd"
         android:textSize="20sp"
+        android:fontFamily="@font/nanumbarunpenr"
         android:layout_marginEnd="10dp" />
 </LinearLayout>

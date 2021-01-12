@@ -1,6 +1,5 @@
 package com.wonsang.madcampweek2.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Fragment1 extends Fragment implements ApiCallable<JSONArray> {
+
     private ApiProvider apiProvider;
     private ContactAdapter adapter;
     private ArrayList<Contact> list = new ArrayList<>();
@@ -45,10 +45,10 @@ public class Fragment1 extends Fragment implements ApiCallable<JSONArray> {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_1, container, false);
 
         String token = LoginManagement.getInstance().getToken(getContext());
-        Context mContext = getActivity().getApplicationContext();
 
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerview1);
         recyclerView.setHasFixedSize(true);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));
 
 
         apiProvider = new ApiProvider(getContext());
