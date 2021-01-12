@@ -12,38 +12,38 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.wonsang.madcampweek2.R;
 import com.wonsang.madcampweek2.api.ApiCallable;
 import com.wonsang.madcampweek2.api.ApiProvider;
+import com.wonsang.madcampweek2.fragment.Fragment3;
+import com.wonsang.madcampweek2.fragment.GalleryFragment;
 import com.wonsang.madcampweek2.model.Post;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BlogPostAdapter extends RecyclerView.Adapter<BlogPostAdapter.Holder>{
 
     private Context context;
     private List<Post> list;
-    private ApiProvider apiProvider;
-    private int deletepos;
-    public BlogPostAdapter(Context context, List<Post> list) {
+    private Fragment3 fragment3;
+
+    public BlogPostAdapter(Context context, Fragment3 fragment3) {
         this.context = context;
-        this.list = list;
+        this.list = new ArrayList<>();
+        this.fragment3 = fragment3;
     }
-
-
-
 
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.frag1_item, parent, false);
-//        Holder holder = new Holder(view, this);
-        return null;
+        return new Holder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
-        int itemposition = position;
-        holder.wordText.setText(itemposition);
-        holder.meaningText.setText(list.get(itemposition).getContent());
-//        Log.e("StudyApp", "onBindViewHolder" + itemposition);
+        Post post = list.get(position);
+        holder.wordText.setText(post.getTitle());
+        holder.meaningText.setText(post.getContent());
+        holder.view.setOnClickListener((v) -> fragment3.update(post.getTitle(), post.getContent()));
     }
 
     @Override
@@ -61,24 +61,12 @@ public class BlogPostAdapter extends RecyclerView.Adapter<BlogPostAdapter.Holder
     public class Holder extends RecyclerView.ViewHolder {
         public TextView wordText;
         public TextView meaningText;
-
-        public Holder(View view, ApiCallable apiCallable){
+        private View view;
+        public Holder(View view){
             super(view);
-            wordText = (TextView) view.findViewById(R.id.wordText);
-            meaningText = (TextView) view.findViewById(R.id.meaningText);
-
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = getAdapterPosition();
-                    if (pos != RecyclerView.NO_POSITION) {
-                        Post item = list.get(pos);
-                        Context context = v.getContext();
-                        apiProvider = new ApiProvider(context);
-                        // 여기서는 postview 바꾸는 것
-                    }
-                }
-            });
+            wordText =  view.findViewById(R.id.wordText);
+            meaningText = view.findViewById(R.id.meaningText);
+            this.view = view;
         }
     }
 }

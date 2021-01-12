@@ -58,12 +58,14 @@ public class SignInActivity extends AppCompatActivity implements ApiCallable<Str
             String m2 = account.getGivenName();
             String m3 = account.getDisplayName();
             String m4 = account.getIdToken();
-            Log.d("TOKEN", account.getIdToken());
+            LoginManagement.getInstance().setToken(m4);
+
+            Log.d("TOKEN", m4);
             Log.d("Name : ", m);
             Log.d("Name 2: ", m2);
             Log.d("Name 3: ", m3);
             Log.d("Email :", email);
-
+            ab.AccountDataDao().deleteAll();
             ab.AccountDataDao().insert(new AccountData(m4, email));
             ApiProvider apiProvider = new ApiProvider(this);
             apiProvider.isValidAccessToken(account.getIdToken(), this);

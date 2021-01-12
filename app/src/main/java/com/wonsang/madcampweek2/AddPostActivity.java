@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.wonsang.madcampweek2.api.ApiCallable;
 import com.wonsang.madcampweek2.api.ApiProvider;
+import com.wonsang.madcampweek2.fragment.Fragment3;
 
 import org.json.JSONObject;
 
@@ -25,8 +26,8 @@ public class AddPostActivity extends AppCompatActivity implements ApiCallable<JS
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_post);
-        etTitle = findViewById(R.id.etName);
-        etContent = findViewById(R.id.etEmail);
+        etTitle = findViewById(R.id.etTitle);
+        etContent = findViewById(R.id.etContent);
         btnSend = findViewById(R.id.btnSend);
 
         apiProvider = new ApiProvider(this);
@@ -46,13 +47,11 @@ public class AddPostActivity extends AppCompatActivity implements ApiCallable<JS
             try {
                 String title = response.getString("title");
                 String content = response.getString("content");
-                int id = response.getInt("id");
 
                 Intent intent = new Intent();
-                intent.putExtra("id", id);
-                intent.putExtra("name", title);
-                intent.putExtra("email", content);
-                setResult(100, intent);
+                intent.putExtra("title", title);
+                intent.putExtra("content", content);
+                setResult(Fragment3.POST_ADD_REQUEST, intent);
                 finish();
             }
             catch (Exception e){

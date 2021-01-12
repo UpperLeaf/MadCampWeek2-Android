@@ -28,6 +28,7 @@ public class PermissionActivity extends AppCompatActivity implements ApiCallable
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_permission);
+        setTheme(R.style.Theme_AppCompat_DayNight);
         initializeGrant();
 
         AccountDatabase ab = AccountDatabase.getAppDatabase(this);

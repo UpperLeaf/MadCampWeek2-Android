@@ -59,6 +59,10 @@ public class LoginManagement implements OAuthLogin{
         ab.AccountDataDao().deleteAll();
     }
 
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     public String getToken(Context context) {
         if (token == null)
             token = AccountDatabase.getAppDatabase(context).AccountDataDao().findAccountDataLimitOne().getToken();

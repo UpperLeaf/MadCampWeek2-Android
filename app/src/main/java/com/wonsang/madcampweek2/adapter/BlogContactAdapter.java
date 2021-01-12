@@ -13,78 +13,97 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.android.volley.VolleyError;
+import com.wonsang.madcampweek2.LoginManagement;
 import com.wonsang.madcampweek2.R;
 import com.wonsang.madcampweek2.ShowBlogActivity;
 import com.wonsang.madcampweek2.api.ApiCallable;
 import com.wonsang.madcampweek2.api.ApiProvider;
+import com.wonsang.madcampweek2.fragment.Fragment3;
 import com.wonsang.madcampweek2.model.Contact;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class BlogContactAdapter extends RecyclerView.Adapter<BlogContactAdapter.Holder> {
+public class BlogContactAdapter extends RecyclerView.Adapter<BlogContactAdapter.Holder> implements ApiCallable<JSONArray> {
 
-    private Context context;
-    private List<Contact> list;
     private ApiProvider apiProvider;
-    private int deletepos;
-    public BlogContactAdapter(Context context, List<Contact> list) {
+    private Context context;
+    private List<Contact> contacts;
+
+    public BlogContactAdapter(Context context) {
         this.context = context;
-        this.list = list;
+        this.contacts = new ArrayList<>();
+        this.apiProvider = new ApiProvider(context);
+        apiProvider.getAllContacts(LoginManagement.getInstance().getToken(context), this);
     }
 
     public List<Contact> getList() {
-        return list;
+        return contacts;
     }
     public void setList(List<Contact> list) {
-        this.list = list;
+        this.contacts = list;
     }
 
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.frag1_item, parent, false);
-//        Holder holder = new Holder(view, this);
-        return null;
+        return new Holder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
-        int itemposition = position;
-        holder.wordText.setText(list.get(itemposition).getName());
-        holder.meaningText.setText(list.get(itemposition).getEmail());
+        holder.wordText.setText(contacts.get(position).getName());
+        holder.meaningText.setText(contacts.get(position).getEmail());
+        holder.view.setOnClickListener((v) -> {
+            Intent intent = new Intent(context, ShowBlogActivity.class);
+            intent.putExtra("email", contacts.get(position).getEmail());
+            context.startActivity(intent);
+        });
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return contacts.size();
+    }
+
+    @Override
+    public void getResponse(ApiProvider.RequestType type, JSONArray response) {
+        List<Contact> contacts = new ArrayList<>();
+        try {
+            for (int i = 0; i < response.length(); i++) {
+                JSONObject object = response.getJSONObject(i);
+                int id = object.getInt("id");
+                String name = object.getString("name");
+                String email = object.getString("email");
+                contacts.add(new Contact(name, email, id));
+            }
+        }catch (JSONException ex){
+            ex.printStackTrace();
+        }
+        this.contacts = contacts;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void getError(VolleyError error) {
+        System.out.println("Get All Contacts : " + error);
     }
 
     public class Holder extends RecyclerView.ViewHolder {
         public TextView wordText;
         public TextView meaningText;
-
-        public Holder(View view, ApiCallable apiCallable){
+        private View view;
+        public Holder(View view){
             super(view);
-            wordText = (TextView) view.findViewById(R.id.wordText);
-            meaningText = (TextView) view.findViewById(R.id.meaningText);
-
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = getAdapterPosition();
-                    if (pos != RecyclerView.NO_POSITION) {
-                        Intent intent = new Intent(v.getContext(), ShowBlogActivity.class);
-                        //intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
-                        Contact item = list.get(pos);
-                        intent.putExtra("id", item.getId());
-                        intent.putExtra("position", pos);
-                        intent.putExtra("name", item.getName());
-                        intent.putExtra("email", item.getEmail());
-                        Context context = v.getContext();
-                        ((Activity)(context)).startActivityForResult(intent, 101);
-                    }
-                }
-            });
+            this.view = view;
+            wordText =  view.findViewById(R.id.wordText);
+            meaningText =  view.findViewById(R.id.meaningText);
         }
     }
 }
