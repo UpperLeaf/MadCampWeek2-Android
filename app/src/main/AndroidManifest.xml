@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.wonsang.madcampweek2">
 
     <uses-permission android:name="android.permission.CAMERA" />
@@ -15,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MadCampWeek2"
         android:usesCleartextTraffic="true">
-        <activity android:name=".AddPostActivity"></activity>
+        <activity android:name=".EditProfileActivity"></activity>
+        <activity android:name=".AddPostActivity" />
         <activity android:name=".ShowBlogActivity" />
 
         <provider
