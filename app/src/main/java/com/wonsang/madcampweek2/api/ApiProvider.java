@@ -201,6 +201,27 @@ public class ApiProvider {
         }
     }
 
+    public void saveProfile(String token, String newBlogTitle, String newDescription, String image, ApiCallable<JSONObject> apiCallable) {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("blogTitle", newBlogTitle);
+            object.put("description", newDescription);
+            object.put("image", image);
+            String requestUrl = url + "blog/";
+            JsonObjectHeaderRequest request =
+                    new JsonObjectHeaderRequest(Request.Method.POST
+                            , requestUrl
+                            , object
+                            , response -> apiCallable.getResponse(RequestType.EDIT_PROFILE, response)
+                            , apiCallable::getError);
+            request.getHeaders().put("Authorization", token);
+            requestQueue.add(request);
+        }catch (JSONException ex){
+            ex.printStackTrace();
+        }
+    }
+
+
     public void deletePost(String token, int id) {
         String requestUrl = url + "post/" + id;
         StringHeaderRequest request = new StringHeaderRequest(Request.Method.DELETE

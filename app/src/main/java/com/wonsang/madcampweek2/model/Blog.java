@@ -8,6 +8,8 @@ public class Blog {
     public String bannerImage;
     public List<Post> posts;
     public String description;
+    public boolean hasProfileImage;
+    public String profileImage;
 
     public String getTitle() {
         return title;
