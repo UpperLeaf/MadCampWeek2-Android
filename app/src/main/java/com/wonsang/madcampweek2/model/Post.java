@@ -1,13 +1,18 @@
 package com.wonsang.madcampweek2.model;
 
 public class Post {
+    public int id;
     public String title;
     public String content;
-
 
     public Post(String title, String content){
         this.title = title;
         this.content = content;
+    }
+
+    public Post(String title, String content, int id){
+        this(title, content);
+        this.id = id;
     }
 
     public String getTitle() {

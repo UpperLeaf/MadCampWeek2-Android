@@ -37,6 +37,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".EditContactActivity" />
+        <activity android:name=".EditPostActivity"/>
         <activity android:name=".AddGalleryActivity" />
         <activity android:name=".AddContactActivity" />
         <activity android:name=".SignInActivity" />

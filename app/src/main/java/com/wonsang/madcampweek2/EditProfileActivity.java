@@ -39,18 +39,17 @@ public class EditProfileActivity extends AppCompatActivity implements ApiCallabl
         editProfile.setOnClickListener(this);
         saveBtn.setOnClickListener(this);
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.save_button:
                 String newBlogTitle = editBlogTitle.getText().toString();
                 String newDescription = editDescription.getText().toString();
-                String ImageUrl= "null";
-// TODO: image 관련 질문   String newImageUrl = editImage
+
                 apiProvider = new ApiProvider(this);
                 String token = LoginManagement.getInstance().getToken(this);
-
-                apiProvider.saveProfile(token, newBlogTitle, newDescription, ImageUrl, this);
+                apiProvider.saveProfile(token, newBlogTitle, newDescription, this);
                 break;
             case R.id.editProfile:
                 //TODO: 형한테 부탁
@@ -62,15 +61,12 @@ public class EditProfileActivity extends AppCompatActivity implements ApiCallabl
     public void getResponse(ApiProvider.RequestType type, JSONObject response) {
         if (type == ApiProvider.RequestType.EDIT_PROFILE){
             try {
-                String blogTitle = response.getString("blogTitle");
-                String description = response.getString("description");
-//                int id = response.getInt("id");
+                String blogTitle = editBlogTitle.getText().toString();
+                String description = editDescription.getText().toString();
 
                 Intent intent = new Intent();
-//                intent.putExtra("id", id);
                 intent.putExtra("blogTitle", blogTitle);
                 intent.putExtra("description", description);
-
                 setResult(101, intent);
                 finish();
             } catch (Exception e) {

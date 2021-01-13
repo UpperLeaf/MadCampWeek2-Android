@@ -45,10 +45,12 @@ public class AddPostActivity extends AppCompatActivity implements ApiCallable<JS
     public void getResponse(ApiProvider.RequestType type, JSONObject response) {
         if (type == ApiProvider.RequestType.ADD_POST){
             try {
+                int id = response.getInt("id");
                 String title = response.getString("title");
                 String content = response.getString("content");
 
                 Intent intent = new Intent();
+                intent.putExtra("id", id);
                 intent.putExtra("title", title);
                 intent.putExtra("content", content);
                 setResult(Fragment3.POST_ADD_REQUEST, intent);

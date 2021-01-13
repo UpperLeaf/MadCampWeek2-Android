@@ -67,18 +67,29 @@ public class MainActivity extends AppCompatActivity {
         } else if (requestCode == GalleryFragment.CAMERA_REQUEST_CODE && resultCode == -1) {
             ((GalleryFragment) viewpagerAdapter.getItem(ViewpagerAdapter.GALLERY_POSITION)).capture();
         } else if (requestCode == Fragment3.POST_ADD_REQUEST && data != null) {
-
+            int id = data.getExtras().getInt("id");
             String title = data.getStringExtra("title");
             String content = data.getStringExtra("content");
-            Post post = new Post(title, content);
+            Post post = new Post(title, content, id);
 
             Fragment3 fragment3 = (Fragment3) viewpagerAdapter.getItems().get(ViewpagerAdapter.BLOG_POSITION);
             fragment3.notifyAddPost(post);
         } else if (requestCode == Fragment3.PROFILE_EDIT_REQUEST && data!= null) {
+            String title = data.getStringExtra("blogTitle");
+            String description = data.getStringExtra("description");
+
+            Fragment3 fragment3 = (Fragment3) viewpagerAdapter.getItems().get(ViewpagerAdapter.BLOG_POSITION);
+            fragment3.notifyEditProfile(title, description);
 
         } else if (requestCode == GalleryFragment.CAMERA_PICK && data != null){
             Uri selectedImage = data.getData();
             ((GalleryFragment) viewpagerAdapter.getItem(ViewpagerAdapter.GALLERY_POSITION)).selectImage(selectedImage);
+        }
+        else if (requestCode == Fragment3.EDIT_POST_REQUEST && data != null){
+            String title = data.getStringExtra("editTitle");
+            String content = data.getStringExtra("editContent");
+            Fragment3 fragment3 = (Fragment3) viewpagerAdapter.getItems().get(ViewpagerAdapter.BLOG_POSITION);
+            fragment3.notifyEditPost(title, content);
         }
     }
 

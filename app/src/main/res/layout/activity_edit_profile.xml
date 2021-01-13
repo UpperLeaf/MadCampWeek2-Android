@@ -37,7 +37,7 @@
         android:hint="한 줄 소개를 입력해주세요"></EditText>
 
     <Button
-        android:id="@+id/SaveProfile"
+        android:id="@+id/save_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="저장"

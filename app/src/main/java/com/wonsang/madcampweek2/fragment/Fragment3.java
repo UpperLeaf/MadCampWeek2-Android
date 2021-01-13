@@ -1,11 +1,11 @@
 package com.wonsang.madcampweek2.fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,8 +24,11 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.wonsang.madcampweek2.AddPostActivity;
+import com.wonsang.madcampweek2.EditPostActivity;
+import com.wonsang.madcampweek2.EditProfileActivity;
 import com.wonsang.madcampweek2.LoginManagement;
 import com.wonsang.madcampweek2.R;
+import com.wonsang.madcampweek2.Updatable;
 import com.wonsang.madcampweek2.adapter.BlogContactAdapter;
 import com.wonsang.madcampweek2.adapter.BlogPostAdapter;
 import com.wonsang.madcampweek2.api.ApiCallable;
@@ -38,12 +40,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , View.OnClickListener {
+public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , View.OnClickListener, Updatable {
 
     private ApiProvider apiProvider;
     private BlogContactAdapter contactAdapter;
@@ -54,14 +55,19 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , Vie
     private TextView description;
     private TextView blogTitle;
     private Animation fab_open, fab_close;
+
     private FloatingActionButton fab_main, fab_sub1, fab_sub2;
 
+    private CardView postCard;
+
+    private Post post;
     private TextView postTitle;
     private TextView postContent;
 
     private static Base64.Decoder decoder;
 
     public static int POST_ADD_REQUEST = 400;
+    public static int EDIT_POST_REQUEST = 401;
     public static int PROFILE_EDIT_REQUEST = 319;
     private boolean isFabOpen = false;
 
@@ -90,6 +96,7 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , Vie
         blogTitle = rootView.findViewById(R.id.title);
         profileImageView = rootView.findViewById(R.id.profileImage);
         bannerImageView = rootView.findViewById(R.id.bannerImage);
+        postCard = rootView.findViewById(R.id.post_card);
 
         recyclerView.setHasFixedSize(true);
         String token = LoginManagement.getInstance().getToken(getContext());
@@ -110,20 +117,68 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , Vie
         apiProvider.getMyBlog(token, this);
         postTitle = rootView.findViewById(R.id.post_title);
         postContent = rootView.findViewById(R.id.post_content);
-        fab_main =  rootView.findViewById(R.id.fab_main3);
-        fab_sub1 =  rootView.findViewById(R.id.fab_sub13);
-        fab_sub2 =  rootView.findViewById(R.id.fab_sub23);
+
+        fab_main = rootView.findViewById(R.id.fab_main3);
+        fab_sub1 = rootView.findViewById(R.id.fab_sub13);
+        fab_sub2 = rootView.findViewById(R.id.fab_sub23);
+
         fab_main.setOnClickListener(this);
         fab_sub1.setOnClickListener(this);
         fab_sub2.setOnClickListener(this);
-//        fab_sub1.setOnClickListener(v -> {
-//            //TODO: EditProfileActivity
-//        });
-//        fab_sub1.setOnClickListener(v -> {
-//            Intent intent = new Intent(getContext(), AddPostActivity.class);
-//            getActivity().startActivityForResult(intent, POST_ADD_REQUEST);
-//        });
 
+        fab_sub1.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), EditProfileActivity.class);
+            getActivity().startActivityForResult(intent, PROFILE_EDIT_REQUEST);
+        });
+        fab_sub2.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), AddPostActivity.class);
+            getActivity().startActivityForResult(intent, POST_ADD_REQUEST);
+        });
+        postCard.setOnLongClickListener(v -> {
+              Context context = v.getContext();
+              apiProvider = new ApiProvider(context);
+
+              AlertDialog.Builder builder =
+                      new AlertDialog.Builder(context, R.style.Theme_AppCompat_Dialog_Alert)
+                              .setMessage(post.getTitle() + "을 " + "삭제 하시겠습니까?")
+                              .setPositiveButton("네", (dialog, which) -> {
+                                  apiProvider.deletePost(token, post.id);
+                                  for(int i = 0; i < postListAdapter.getList().size(); i++){
+                                      if(postListAdapter.getList().get(i).id == post.id){
+                                          postListAdapter.getList().remove(i);
+                                          postListAdapter.notifyItemRemoved(i);
+                                          break;
+                                      }
+                                  }
+                                  if(postListAdapter.getList().size() >= 1) {
+                                      Post post = postListAdapter.getList().get(postListAdapter.getList().size() - 1);
+                                      this.post = post;
+                                      this.postContent.setText(post.getContent());
+                                      this.postTitle.setText(post.getTitle());
+                                  }else {
+                                      this.post = null;
+                                      this.postContent.setText("");
+                                      this.postTitle.setText("");
+                                  }
+
+                                  dialog.dismiss();
+                              })
+                              .setNegativeButton("아니오",
+                                      (dialog, id) -> dialog.cancel());
+
+              AlertDialog alert = builder.create();
+              alert.setTitle("게시물 삭제");
+              alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(255, 102, 102, 102)));
+              alert.show();
+
+              return true;
+          });
+        postCard.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), EditPostActivity.class);
+            intent.putExtra("id", post.id);
+            intent.putExtra("title", post.getTitle());
+            getActivity().startActivityForResult(intent, EDIT_POST_REQUEST);
+        });
         return rootView;
     }
 
@@ -141,9 +196,11 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , Vie
         postListAdapter.notifyDataSetChanged();
     }
 
-    public void update(String title, String content) {
-        postTitle.setText(title);
-        postContent.setText(content);
+    @Override
+    public void update(Post post) {
+        this.post = post;
+        postTitle.setText(post.getTitle());
+        postContent.setText(post.getContent());
     }
 
 
@@ -158,9 +215,10 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , Vie
             List<Post> postList = new ArrayList<>();
             JSONArray jsonArray = response.getJSONArray("post");
             for (int i = 0; i < jsonArray.length(); i++) {
+                int postId = jsonArray.getJSONObject(i).getInt("id");
                 String postTitle = jsonArray.getJSONObject(i).getString("title");
                 String postContent = jsonArray.getJSONObject(i).getString("content");
-                Post post = new Post(postTitle, postContent);
+                Post post = new Post(postTitle, postContent, postId);
                 postList.add(post);
             }
             blog.setTitle(blogTitle);
@@ -172,6 +230,7 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , Vie
             int postSize = postList.size();
             if(postSize >= 1){
                 Post post = postList.get(postSize - 1);
+                this.post = post;
                 postTitle.setText(post.getTitle());
                 postContent.setText(post.getContent());
             }
@@ -184,7 +243,7 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , Vie
 
     @Override
     public void getError(VolleyError error) {
-
+        System.out.println(error);
     }
 
     public void notifyAddPost(Post post) {
@@ -192,23 +251,21 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , Vie
         postListAdapter.getList().add(post);
         postListAdapter.notifyItemInserted(pos);
 
+        this.post = post;
         postTitle.setText(post.getTitle());
         postContent.setText(post.getContent());
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
-            case R.id.fab_main:
+            case R.id.fab_main3:
                 toggleFab();
                 break;
-
-            case R.id.fab_sub1:
+            case R.id.fab_sub13:
                 toggleFab();
                 Toast.makeText(getActivity(), "Camera Open-!", Toast.LENGTH_SHORT).show();
                 break;
-
-            case R.id.fab_sub2:
+            case R.id.fab_sub23:
                 toggleFab();
                 Toast.makeText(getActivity(), "Gallery Open-!", Toast.LENGTH_SHORT).show();
                 break;
@@ -216,8 +273,6 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , Vie
         }
     }
     private void toggleFab() {
-        Log.d("hi", "hi");
-
         if (isFabOpen) {
             fab_main.setImageResource(R.drawable.ic_add);
             fab_sub1.startAnimation(fab_close);
@@ -233,8 +288,26 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , Vie
             fab_sub1.setClickable(true);
             fab_sub2.setClickable(true);
             isFabOpen = true;
-
         }
     }
 
+    public void notifyEditProfile(String title, String description) {
+        this.blogTitle.setText(title);
+        this.description.setText(description);
+    }
+
+    public void notifyEditPost(String title, String content) {
+        this.postTitle.setText(title);
+        this.postContent.setText(content);
+
+        this.post.title = title;
+        this.post.content = content;
+
+        for(int i = 0; i < postListAdapter.getList().size(); i++){
+            if(postListAdapter.getList().get(i).id == post.id){
+                postListAdapter.notifyItemChanged(i);
+                break;
+            }
+        }
+    }
 }
