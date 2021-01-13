@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -174,10 +175,12 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , Vie
               return true;
           });
         postCard.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), EditPostActivity.class);
-            intent.putExtra("id", post.id);
-            intent.putExtra("title", post.getTitle());
-            getActivity().startActivityForResult(intent, EDIT_POST_REQUEST);
+            if(post != null){
+                Intent intent = new Intent(getContext(), EditPostActivity.class);
+                intent.putExtra("id", post.id);
+                intent.putExtra("title", post.getTitle());
+                getActivity().startActivityForResult(intent, EDIT_POST_REQUEST);
+            }
         });
         return rootView;
     }
@@ -193,10 +196,10 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , Vie
             Glide.with(getContext()).load(R.drawable.banner_image3).into(bannerImageView);
 
         if(blog.hasProfileImage){
-            Glide.with(this).load(blog.profileImage).into(profileImageView);
+            byte[] bytes = decoder.decode(blog.profileImage);
+            Glide.with(this).load(bytes).into(profileImageView);
         }else
             Glide.with(this).load(blog.getProfileImageUrl()).into(profileImageView);
-        Glide.with(getContext()).load(blog.getProfileImageUrl()).into(profileImageView);
         postListAdapter.setList(blog.posts);
         postListAdapter.notifyDataSetChanged();
     }
@@ -219,8 +222,9 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , Vie
             String profileImageUrl = response.getString("userImageUrl");
             boolean hasProfileImage = response.getBoolean("hasProfileImage");
             String profileImage = null;
-            if(hasProfileImage)
+            if(hasProfileImage) {
                 profileImage = response.getString("profileImage");
+            }
 
             List<Post> postList = new ArrayList<>();
             JSONArray jsonArray = response.getJSONArray("post");
@@ -237,6 +241,7 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , Vie
             blog.setBannerImage(bannerImage);
             blog.setProfileImageUrl(profileImageUrl);
             blog.setPosts(postList);
+            blog.hasProfileImage = hasProfileImage;
             if(blog.hasProfileImage)
                 blog.profileImage =  profileImage;
             int postSize = postList.size();
@@ -303,9 +308,11 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , Vie
         }
     }
 
-    public void notifyEditProfile(String title, String description) {
+    public void notifyEditProfile(String title, String description, boolean changeImage, Uri profile) {
         this.blogTitle.setText(title);
         this.description.setText(description);
+        if(changeImage)
+            Glide.with(this).load(profile).into(profileImageView);
     }
 
     public void notifyEditPost(String title, String content) {
