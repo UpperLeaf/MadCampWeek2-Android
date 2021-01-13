@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.wonsang.madcampweek2.R;
+import com.wonsang.madcampweek2.Updatable;
 import com.wonsang.madcampweek2.api.ApiCallable;
 import com.wonsang.madcampweek2.api.ApiProvider;
 import com.wonsang.madcampweek2.fragment.Fragment3;
@@ -23,12 +24,12 @@ public class BlogPostAdapter extends RecyclerView.Adapter<BlogPostAdapter.Holder
 
     private Context context;
     private List<Post> list;
-    private Fragment3 fragment3;
+    private Updatable updatable;
 
-    public BlogPostAdapter(Context context, Fragment3 fragment3) {
+    public BlogPostAdapter(Context context, Updatable updatable) {
         this.context = context;
         this.list = new ArrayList<>();
-        this.fragment3 = fragment3;
+        this.updatable = updatable;
     }
 
     @NonNull
@@ -43,7 +44,9 @@ public class BlogPostAdapter extends RecyclerView.Adapter<BlogPostAdapter.Holder
         Post post = list.get(position);
         holder.wordText.setText(String.valueOf(position+1));
         holder.meaningText.setText(post.getTitle());
-        holder.view.setOnClickListener((v) -> fragment3.update(post.getTitle(), post.getContent()));
+        holder.view.setOnClickListener((v) -> {
+            updatable.update(post);
+        });
     }
 
     @Override

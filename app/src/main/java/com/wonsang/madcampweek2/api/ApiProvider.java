@@ -12,6 +12,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.wonsang.madcampweek2.AccountDatabase;
 import com.wonsang.madcampweek2.model.Contact;
+import com.wonsang.madcampweek2.model.Post;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -181,14 +182,14 @@ public class ApiProvider {
         }
     }
 
-    public void saveProfile(String token, String newBlogTitle, String newDescription, String ImageUrl, ApiCallable<JSONObject> apiCallable) {
+    public void saveProfile(String token, String newBlogTitle, String newDescription, ApiCallable<JSONObject> apiCallable) {
         JSONObject object = new JSONObject();
         try {
-            object.put("blogTtle", newBlogTitle);
+            object.put("blogTitle", newBlogTitle);
             object.put("description", newDescription);
-            String requestUrl = url + "post/";
+            String requestUrl = url + "blog/";
             JsonObjectHeaderRequest request =
-                    new JsonObjectHeaderRequest(Request.Method.PUT
+                    new JsonObjectHeaderRequest(Request.Method.POST
                             , requestUrl
                             , object
                             , response -> apiCallable.getResponse(RequestType.EDIT_PROFILE, response)
@@ -199,6 +200,36 @@ public class ApiProvider {
             ex.printStackTrace();
         }
     }
+
+    public void deletePost(String token, int id) {
+        String requestUrl = url + "post/" + id;
+        StringHeaderRequest request = new StringHeaderRequest(Request.Method.DELETE
+                , requestUrl
+                , response -> {}
+                , System.out::println);
+        request.getHeaders().put("Authorization", token);
+        requestQueue.add(request);
+    }
+
+    public void editPost(String token, Post post, ApiCallable<JSONObject> objectApiCallable) {
+        String requestUrl = url + "post/" + post.id;
+
+        try {
+            JSONObject object = new JSONObject();
+            object.put("title", post.getTitle());
+            object.put("content", post.getContent());
+            JsonObjectHeaderRequest request = new JsonObjectHeaderRequest(Request.Method.PUT
+                    , requestUrl
+                    , object
+                    , response -> objectApiCallable.getResponse(RequestType.EDIT_POST, response)
+                    , System.out::println);
+            request.getHeaders().put("Authorization", token);
+            requestQueue.add(request);
+        }catch (JSONException ex){
+            ex.printStackTrace();
+        }
+    }
+
 
 
     public enum RequestType {
