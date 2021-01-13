@@ -1,0 +1,204 @@
+[33mcommit dd366540311b2878c2eea5e5dbe8235dc754dc35[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: cd94c43 c608609
+Author: shinbastien <jugipalace2@kaist.ac.kr>
+Date:   Tue Jan 12 23:47:03 2021 +0900
+
+    Merged
+
+[33mcommit cd94c43912e252d79c3015b81db3426ffdd9e5e5[m
+Author: shinbastien <jugipalace2@kaist.ac.kr>
+Date:   Tue Jan 12 23:45:37 2021 +0900
+
+    90% finished
+
+[33mcommit 4ad58d65046bb509ece3fa7d1d153593b33ab61f[m
+Author: shinbastien <jugipalace2@kaist.ac.kr>
+Date:   Tue Jan 12 22:27:00 2021 +0900
+
+    edit profile
+
+[33mcommit c60860946c2562f7122ed2dc55821bd818b76660[m
+Author: UpperLeaf <tkdduq8260@gmail.com>
+Date:   Tue Jan 12 22:23:42 2021 +0900
+
+    Feat : SignIn Activity 변경
+
+[33mcommit 4ec453e0a01acc6cd68b7ce3a0c7cab1401353e5[m
+Author: UpperLeaf <tkdduq8260@gmail.com>
+Date:   Tue Jan 12 22:00:39 2021 +0900
+
+    Feat : Gallery Picture Pick
+
+[33mcommit c6b81220785c92bc638bc8c8aec0f526a32a9e22[m
+Author: UpperLeaf <tkdduq8260@gmail.com>
+Date:   Tue Jan 12 21:31:26 2021 +0900
+
+    Feat : 다른 사람의 블로그 볼 수 있는 기능 추가
+
+[33mcommit 5bd3c63b3eeef39826f775bce2c3f45c0af73bc3[m
+Author: shinbastien <jugipalace2@kaist.ac.kr>
+Date:   Tue Jan 12 15:56:21 2021 +0900
+
+    before pair programming
+
+[33mcommit 8b84082f2744dd01e0e2cc5f44c0bdac86e3f00f[m
+Author: shinbastien <jugipalace2@kaist.ac.kr>
+Date:   Tue Jan 12 15:37:12 2021 +0900
+
+    slight fix
+
+[33mcommit 3d1615dd6421182e41d2f23b803b92a9d342d647[m
+Author: UpperLeaf <tkdduq8260@gmail.com>
+Date:   Tue Jan 12 06:21:13 2021 +0900
+
+    전체적인 코드 수정
+
+[33mcommit 4be7b94898b6db523c1fe83a8e64b7e8760fd9ae[m
+Merge: 4393f10 58f4736
+Author: shinbastien <jugipalace2@kaist.ac.kr>
+Date:   Tue Jan 12 02:05:38 2021 +0900
+
+    merge
+
+[33mcommit 4393f106992032d09f6e36de257690d4423739a6[m
+Author: shinbastien <jugipalace2@kaist.ac.kr>
+Date:   Tue Jan 12 02:03:27 2021 +0900
+
+    during fragment 3
+
+[33mcommit 58f473623b0d42ed8738e0bddde01c3d10901d78[m
+Author: UpperLeaf <tkdduq8260@gmail.com>
+Date:   Mon Jan 11 01:37:40 2021 +0900
+
+    Fix Add id Info in add contact method
+
+[33mcommit 1716922998c9ebc699bd0a7c7e65ad8d3e0c6d7c[m
+Merge: cba785e 880c7b6
+Author: shinbastien <jugipalace2@kaist.ac.kr>
+Date:   Mon Jan 11 01:31:53 2021 +0900
+
+    after merge
+
+[33mcommit cba785eef1e7fb335b9745911cdd07ceeb55a898[m
+Author: shinbastien <jugipalace2@kaist.ac.kr>
+Date:   Sun Jan 10 23:35:00 2021 +0900
+
+    finish every contact functions
+
+[33mcommit 880c7b6a11e26350b16da71d08618cebc7375d1e[m
+Author: UpperLeaf <tkdduq8260@gmail.com>
+Date:   Sun Jan 10 22:27:50 2021 +0900
+
+    Feat Delete Image
+
+[33mcommit 1d0de33afb54f0cd5d29eeecacadf7598fc6dfee[m
+Author: UpperLeaf <tkdduq8260@gmail.com>
+Date:   Sun Jan 10 18:19:57 2021 +0900
+
+    Fixed Activity Result intent data should null
+
+[33mcommit 25cc2105421ec22fb748d8e51cc2f5388ca17680[m
+Author: UpperLeaf <tkdduq8260@gmail.com>
+Date:   Sun Jan 10 17:17:37 2021 +0900
+
+    Feat : DB Query minimize
+
+[33mcommit a40e83c90b512a54a0fcdd40ea4ed70e7ad8bdd1[m
+Merge: 3a8705a d9f9b97
+Author: UpperLeaf <tkdduq8260@gmail.com>
+Date:   Sun Jan 10 16:41:07 2021 +0900
+
+    Merge branch 'master' of https://github.com/UpperLeaf/MadCampWeek2-Android
+
+[33mcommit 3a8705ae7b78eabc818fc313e6b7430a954b817e[m
+Author: UpperLeaf <tkdduq8260@gmail.com>
+Date:   Sun Jan 10 16:41:02 2021 +0900
+
+    Refactor Layout
+
+[33mcommit d9f9b970fbfb93b023a68bc3debb2f056d44aab5[m
+Merge: e957fdc 1cce9f9
+Author: shinbastien <jugipalace2@kaist.ac.kr>
+Date:   Sun Jan 10 16:39:42 2021 +0900
+
+    after merge contact & gallery
+
+[33mcommit e957fdc6f0354f5b1b7a536094b2cd599bd610f9[m
+Author: shinbastien <jugipalace2@kaist.ac.kr>
+Date:   Sun Jan 10 16:25:31 2021 +0900
+
+    finish editcontact
+
+[33mcommit 1cce9f9733d829b1d4cfca7dc4416e6417763270[m
+Author: UpperLeaf <tkdduq8260@gmail.com>
+Date:   Sun Jan 10 15:48:35 2021 +0900
+
+    Feat : Image Gallery
+
+[33mcommit f154f1e2f1b32e9d48129421a576bfc8e16f5c71[m
+Author: UpperLeaf <tkdduq8260@gmail.com>
+Date:   Sun Jan 10 00:15:05 2021 +0900
+
+    Resize Frag 1 item
+
+[33mcommit 77ad32cb8b58509df2fcc115488f0104a28180f5[m
+Merge: 61f6fc9 28a5e06
+Author: UpperLeaf <tkdduq8260@gmail.com>
+Date:   Sun Jan 10 00:04:53 2021 +0900
+
+    Merged
+
+[33mcommit 61f6fc9be29e99d82fcf55bd58a6b152486740d7[m
+Author: UpperLeaf <tkdduq8260@gmail.com>
+Date:   Sat Jan 9 23:24:53 2021 +0900
+
+    Tab 2 Gallery Feature
+
+[33mcommit 28a5e06f23d06e9e0a16852a3ebc49b6a0097495[m
+Author: shinbastien <jugipalace2@kaist.ac.kr>
+Date:   Sat Jan 9 23:24:07 2021 +0900
+
+    adding permission
+
+[33mcommit 3ea2a53842e2d3047f6bfc89cdfa54af6b8fa087[m
+Merge: 8528be5 b006cc7
+Author: shinbastien <jugipalace2@kaist.ac.kr>
+Date:   Sat Jan 9 22:21:09 2021 +0900
+
+    Merge
+
+[33mcommit 8528be5f657873bbd154222417eb5c42de176af7[m
+Author: shinbastien <jugipalace2@kaist.ac.kr>
+Date:   Sat Jan 9 22:19:04 2021 +0900
+
+    finish contacts
+
+[33mcommit b006cc76ac3a8b212ac077a66e594a15bade68c0[m
+Author: UpperLeaf <tkdduq8260@gmail.com>
+Date:   Sat Jan 9 20:05:45 2021 +0900
+
+    Feat : Fragment1
+
+[33mcommit eeb067f543da1b5287bb48aa2636d5a74703d38b[m
+Author: shinbastien <jugipalace2@kaist.ac.kr>
+Date:   Sat Jan 9 18:47:49 2021 +0900
+
+    Contact activity on progress
+
+[33mcommit bce036f1899e077bed2063609a15606c4116f276[m
+Author: UpperLeaf <tkdduq8260@gmail.com>
+Date:   Fri Jan 8 23:52:25 2021 +0900
+
+    Feat : HTTP Bug fixed
+
+[33mcommit ff59c33634e2615ac0ae4732f0fb66ccb83326d6[m
+Author: shinbastien <jugipalace2@kaist.ac.kr>
+Date:   Fri Jan 8 23:16:35 2021 +0900
+
+    first commit
+
+[33mcommit 0db06c5b3fac088de1d7c6ccb371434bcea07fe7[m
+Author: UpperLeaf <tkdduq8260@gmail.com>
+Date:   Thu Jan 7 22:44:10 2021 +0900
+
+    Init : MadCampWeek2 Project
