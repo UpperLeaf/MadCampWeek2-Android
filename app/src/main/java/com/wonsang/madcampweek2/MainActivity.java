@@ -77,9 +77,12 @@ public class MainActivity extends AppCompatActivity {
         } else if (requestCode == Fragment3.PROFILE_EDIT_REQUEST && data!= null) {
             String title = data.getStringExtra("blogTitle");
             String description = data.getStringExtra("description");
-
+            boolean changedProfileImage = data.getExtras().getBoolean("changedProfileImage");
+            Uri profileImage = null;
+            if(changedProfileImage)
+                profileImage = data.getData();
             Fragment3 fragment3 = (Fragment3) viewpagerAdapter.getItems().get(ViewpagerAdapter.BLOG_POSITION);
-            fragment3.notifyEditProfile(title, description);
+            fragment3.notifyEditProfile(title, description, changedProfileImage, profileImage);
 
         } else if (requestCode == GalleryFragment.CAMERA_PICK && data != null){
             Uri selectedImage = data.getData();

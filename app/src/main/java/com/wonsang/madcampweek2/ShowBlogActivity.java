@@ -170,7 +170,8 @@ public class ShowBlogActivity extends AppCompatActivity implements ApiCallable<J
             Glide.with(this).load(R.drawable.banner_image3).into(bannerImageView);
 
         if(blog.hasProfileImage){
-            Glide.with(this).load(blog.profileImage).into(profileImageView);
+            byte[] bytes = decoder.decode(blog.profileImage);
+            Glide.with(this).load(bytes).into(profileImageView);
         }else
             Glide.with(this).load(blog.getProfileImageUrl()).into(profileImageView);
 

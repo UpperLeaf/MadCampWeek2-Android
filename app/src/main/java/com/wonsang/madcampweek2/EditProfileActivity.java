@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Base64;
 
 public class EditProfileActivity extends AppCompatActivity implements ApiCallable<JSONObject>, View.OnClickListener {
 
@@ -34,7 +35,7 @@ public class EditProfileActivity extends AppCompatActivity implements ApiCallabl
     Uri selectedImage;
     ApiProvider apiProvider;
     Button saveBtn;
-
+    Base64.Encoder encoder = Base64.getEncoder();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +59,8 @@ public class EditProfileActivity extends AppCompatActivity implements ApiCallabl
                 apiProvider = new ApiProvider(this);
                 String token = LoginManagement.getInstance().getToken(this);
                 if(selectedImage != null) {
-                    String image = new String(getImageContent(selectedImage));
+                    byte[] bytes = encoder.encode(getImageContent(selectedImage));
+                    String image = new String(bytes);
                     apiProvider.saveProfile(token, newBlogTitle, newDescription, image, this);
                 }
                 else
@@ -108,6 +110,12 @@ public class EditProfileActivity extends AppCompatActivity implements ApiCallabl
                 Intent intent = new Intent();
                 intent.putExtra("blogTitle", blogTitle);
                 intent.putExtra("description", description);
+                if(selectedImage == null)
+                    intent.putExtra("changedProfileImage", false);
+                else {
+                    intent.putExtra("changedProfileImage", true);
+                    intent.setData(selectedImage);
+                }
                 setResult(101, intent);
                 finish();
             } catch (Exception e) {
