@@ -119,8 +119,8 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , Vie
         postContent = rootView.findViewById(R.id.post_content);
 
         fab_main = rootView.findViewById(R.id.fab_main3);
-        fab_sub1 = rootView.findViewById(R.id.fab_sub13);
-        fab_sub2 = rootView.findViewById(R.id.fab_sub23);
+        fab_sub1 = rootView.findViewById(R.id.fab_sub23);
+        fab_sub2 = rootView.findViewById(R.id.fab_sub13);
 
         fab_main.setOnClickListener(this);
         fab_sub1.setOnClickListener(this);
