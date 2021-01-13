@@ -191,6 +191,11 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , Vie
         }
         else
             Glide.with(getContext()).load(R.drawable.banner_image3).into(bannerImageView);
+
+        if(blog.hasProfileImage){
+            Glide.with(this).load(blog.profileImage).into(profileImageView);
+        }else
+            Glide.with(this).load(blog.getProfileImageUrl()).into(profileImageView);
         Glide.with(getContext()).load(blog.getProfileImageUrl()).into(profileImageView);
         postListAdapter.setList(blog.posts);
         postListAdapter.notifyDataSetChanged();
@@ -212,6 +217,11 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , Vie
             String description = response.getString("description");
             String bannerImage = response.getString("bannerImage");
             String profileImageUrl = response.getString("userImageUrl");
+            boolean hasProfileImage = response.getBoolean("hasProfileImage");
+            String profileImage = null;
+            if(hasProfileImage)
+                profileImage = response.getString("profileImage");
+
             List<Post> postList = new ArrayList<>();
             JSONArray jsonArray = response.getJSONArray("post");
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -221,12 +231,14 @@ public class Fragment3 extends Fragment implements ApiCallable<JSONObject> , Vie
                 Post post = new Post(postTitle, postContent, postId);
                 postList.add(post);
             }
+
             blog.setTitle(blogTitle);
             blog.setDescription(description);
             blog.setBannerImage(bannerImage);
             blog.setProfileImageUrl(profileImageUrl);
             blog.setPosts(postList);
-
+            if(blog.hasProfileImage)
+                blog.profileImage =  profileImage;
             int postSize = postList.size();
             if(postSize >= 1){
                 Post post = postList.get(postSize - 1);

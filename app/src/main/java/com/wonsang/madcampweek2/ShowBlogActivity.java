@@ -103,6 +103,11 @@ public class ShowBlogActivity extends AppCompatActivity implements ApiCallable<J
             String description = response.getString("description");
             String bannerImage = response.getString("bannerImage");
             String profileImageUrl = response.getString("userImageUrl");
+            String profileImage = null;
+            boolean hasProfileImage = response.getBoolean("hasProfileImage");
+            if(hasProfileImage)
+                profileImage = response.getString("profileImage");
+
             List<Post> postList = new ArrayList<>();
             JSONArray jsonArray = response.getJSONArray("post");
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -128,6 +133,9 @@ public class ShowBlogActivity extends AppCompatActivity implements ApiCallable<J
             blog.setBannerImage(bannerImage);
             blog.setProfileImageUrl(profileImageUrl);
             blog.setPosts(postList);
+            blog.hasProfileImage = hasProfileImage;
+            if(hasProfileImage)
+                blog.profileImage = profileImage;
 
             int postSize = postList.size();
             if(postSize >= 1){
@@ -160,7 +168,11 @@ public class ShowBlogActivity extends AppCompatActivity implements ApiCallable<J
         }
         else
             Glide.with(this).load(R.drawable.banner_image3).into(bannerImageView);
-        Glide.with(this).load(blog.getProfileImageUrl()).into(profileImageView);
+
+        if(blog.hasProfileImage){
+            Glide.with(this).load(blog.profileImage).into(profileImageView);
+        }else
+            Glide.with(this).load(blog.getProfileImageUrl()).into(profileImageView);
 
         postAdapter.setList(blog.posts);
         postAdapter.notifyDataSetChanged();
